@@ -28,10 +28,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 EMAIL_HOST =  'smtp.gmail.com'
-EMAIL_HOST_USER = 'yourgmail@gmail.com'
-EMAIL_HOST_PASSWORD = 'yourpassword'
+EMAIL_HOST_USER = 'testowymailemail'
+EMAIL_HOST_PASSWORD = 'haslo111'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+#SERVER_EAMIL = 'testowymailemail@gmail.com'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#DEFAULT_FROM_EMAIL = 'testowymailemail@gmail.com'
+
 
 
 
@@ -49,7 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #third party apps
     'crispy_forms',
-
+    'registration',
     #my apps
     'proj',
 )
@@ -91,8 +95,12 @@ WSGI_APPLICATION = 'trydjango.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'damian',
+        'USER': 'damian',
+        'PASSWORD': 'haslo',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -101,14 +109,14 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+DEFAULT_CHARSET = 'utf-8'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
+TIME_ZONE = 'Europe/Berlin'
 
  
 # Static files (CSS, JavaScript, Images)
@@ -129,8 +137,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 #Django register
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTO_LOGIN = True
-REGISTRATION_DEFAULT_FROM_EMAIL = True
-REGISTRATION_EMAIL_HTML = True
+
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'

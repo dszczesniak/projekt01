@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+      }
+
+    {% endblock %}
+</style>
+
+
+{% block profile %}
+    <a class="btn-lg btn-default" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon glyphicon-pencil"> Edit</span></a>
+    <p></p><br>
+    <div class="jumbotron">
+
+        <h2>Curriculum Vitae</h2><hr>
+        <p>Full name: {{ cv.name }} {{cv.surname}}</p>
+        <p>Adress: {{ cv.address }}</p>
+        {% if not cv.address.is_blank %}
+            <p>Birth date: {{ cv.birth_date }}</p>
+        {% endif %}
+        <p>Tel.: {{ cv.telephone }}</p>
+        <p>E-mail: {{ cv.email }}</p><br>
+        <fieldset><legend>Information</legend>
+        <p>Skills: {{cv.skills }}</p>
+        {% if not cv.specialization.is_blank %}
+            <p>Specialization: {{cv.specialization}}</p>
+        {% endif %}
+        </fieldset>
+    </div>
+{% endblock %}

@@ -1,7 +1,85 @@
 body {
-  min-height: 2000px;
+	min-height: 1000px;
+	background-image: url("{% static "img/tlo_strony.jpg" %}");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
 }
 
 .navbar-static-top {
   margin-bottom: 19px;
+}
+
+.jumbotron {
+	background-color:white;
+	opacity: 0.8;
+}
+
+.row {
+	background-color: white;
+	opacity: 0.9;
+	border-radius: 8px;
+	width: 50%;
+	margin-top: 8%;
+	margin-left: 25%;
+}
+
+.minirow{
+
+	background-color: white;
+	border-radius: 8px;
+	width: 100%;
+}
+
+.rama1{
+	margin-left: 27%;
+	margin-top: 20%;
+
+}
+
+.lista1{
+	list-style-type:none;
+	margin: 0;
+	padding: 0;
+}
+
+.li1{
+	float: left;
+	font-family: 'Dejavu Sans';
+	font-size: 24px;
+	font-style: normal;
+}
+
+.li1 a{
+
+  display: block;
+  width: 10em;
+  height: 10em;
+  margin: 0 6px;
+  padding: 4em 1em;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+  background-color: rgb(190, 190, 190);
+  border: 2px solid rgb(175,175,175);
+  border-radius: 6px;
+  text-shadow: #666 .1em .1em .1em;
+  box-shadow: 0 5px 3px rgba(0,0,0,.5);
+  position: relative;
+  -webkit-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+  -moz-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+  -o-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+  -ms-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+}
+
+.li1 a:hover, a:focus {
+  background-color: #fdca00;
+  border-color: #fda700;
+}
+
+.li1 a:active {
+  top: 3px;
+  left: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.5);
 }

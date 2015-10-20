@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block jumbotron %}
+<!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1> Hello! </h1>
+        <h2>Welcome to my page, it's really nice to see you!</h2><br>
+		<p>From now on, this site will allow you to find people who share your interests in the IT area. You will have the opportunity to make new friends, communicate with selected persons, also create your own CV based on our template and arrange quite a new group to work on the poroject.
+		All of this, to better coordinate the work with people which you involve your plans for the near future.
+		<br><br>
+		I hope you enjoy.<br> #Cheers </p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}" role="button">Register now! &raquo;</a>
+        </p>
+      </div>
+{% endblock %}
+
+
+
+
+
+{% block row_2 %}
+<div class="rama1">
+      <ul class="lista1">
+      	<li class="li1"><a href="/myprofile"> My Profile</a></li>
+      	<!-- <li class="li1"><a href="/"> Messages</a></li> -->
+      	<li class="li1"><a href="/base_cv"> Base</a></li>
+      	<!--<li class="li1"><a href="/"> Groups</a></li> -->
+      </ul>
+</div>
+       
+
+{% endblock %}

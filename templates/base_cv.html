@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron {
+        width:25%;
+        padding: 1% 0;
+        float: left;
+		opacity: 0.9;
+      }
+
+      .vvv {
+      	background-color:white;
+		opacity: 0.9;
+		border-radius: 6px;
+		text-align: left;
+    	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    	font-size: 14px;
+        width: 71%;
+        padding: 1% 4%;
+        float: left;
+        margin: 0 20px;
+      }
+
+
+      .li1 {
+		float: none;
+		margin: 2% 0;
+	  }
+
+      .li1 a {
+      	height: 3em;
+      	width: 22em;
+      	padding: 1.7% 2%;
+      	margin: 0;
+      }
+
+		table, th, td {
+		    border: 1px solid black;
+		    border-collapse: collapse;
+		    font-size: 19px;
+		    border-color: white;
+			text-align: center;
+
+		}
+
+		th, td {
+		    padding: 5px;
+		}
+
+		th{
+			text-shadow: white .1em .1em .1em;
+			background-color: #fdca00;
+		}
+
+		td{
+			padding: 2% 1%;
+			background-color: rgb(190, 190, 190)
+		}
+
+		td a{
+			color: #732525;
+		}
+
+		td a:hover {
+			color: #732525;
+			text-decoration: none;
+			background-color: none;
+		}
+
+    {% endblock %}
+</style>
+
+
+
+
+{% block search %}
+	<div class="jumbotron">
+		<form method="POST" class="post-form">
+			{% csrf_token %}
+			{{ form|crispy }}
+			<input class="btn btn-md btn-primary" type="submit"  value="Search !" />
+		</form>
+	</div>
+{% endblock %}
+
+
+
+
+{% block base %}
+	<div class="vvv">
+		<h2>Find someone:</h2><hr>
+		<table style="width:100%">
+		  <tr>
+		  	<th>Nr.</th>
+		    <th>Full Name</th>
+		    <th>Specialization</th>		
+		    <th>E-mail</th>
+		  </tr>
+		  {% for cv in cvs %}
+			  <tr>
+			  	<td>{{forloop.counter}}.</td>
+			    <td><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">{{cv.name}} {{cv.surname}}</a></td>
+			    <td>{{cv.specialization}}</td>		
+			    <td>{{cv.email}}</td>
+			  </tr>
+		  {% endfor %}
+		</table><br>
+	</div>
+{% endblock %}
+

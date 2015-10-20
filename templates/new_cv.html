@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+      	width:55%;
+      }
+
+    {% endblock %}
+</style>
+
+
+{% block profile %}
+ 	<p></p>
+    <div class="jumbotron">
+	    <h2>Curriculum Vitae</h2>
+      <hr>
+	    <form method="POST" class="post-form">{% csrf_token %}
+	          {{ form|crispy }}
+	        <button type="submit" class="save btn btn-default">Save</button>
+	    </form>
+  </div>
+{% endblock %}
+
+
