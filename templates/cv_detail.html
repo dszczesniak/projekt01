@@ -17,6 +17,16 @@
         width:55%;
       }
 
+      legend{
+        font-weight: bold;
+      }
+
+      h2{
+        font-weight: bold;
+        text-align: center;
+        font-size: 33px;
+      }
+
     {% endblock %}
 </style>
 
@@ -29,16 +39,59 @@
         <h2>Curriculum Vitae</h2><hr>
         <p>Full name: {{ cv.name }} {{cv.surname}}</p>
         <p>Adress: {{ cv.address }}</p>
-        {% if not cv.address.is_blank %}
+        {% if cv.birth_date %}
             <p>Birth date: {{ cv.birth_date }}</p>
         {% endif %}
         <p>Tel.: {{ cv.telephone }}</p>
         <p>E-mail: {{ cv.email }}</p><br>
         <fieldset><legend>Information</legend>
         <p>Skills: {{cv.skills }}</p>
-        {% if not cv.specialization.is_blank %}
+        {% if cv.specialization %}
             <p>Specialization: {{cv.specialization}}</p>
         {% endif %}
+        {% if cv.interests %}
+            <p>Interests: {{cv.interests}}</p>
+        {% endif %}
+        </fieldset><br><br>
+        <fieldset><legend>Education</legend>
+        {% if  cv.school %}
+            <p>School: {{cv.school}}</p>
+        {% endif %}
+        {% if  cv.start_learning_period %}
+            <p>Start of school: {{cv.start_learning_period}}</p>
+        {% endif %}
+        {% if  cv.end_learning_period %}
+            <p>End of school: {{cv.end_learning_period}}</p>
+        {% endif %}
+        {% if  cv.title %}
+            <p>Title: {{cv.title}}</p>
+        {% endif %}
+        {% if  cv.field_of_study %}
+            <p>Field of study: {{cv.field_of_study}}</p>
+        {% endif %}
+        </fieldset><br><br>
+        <fieldset><legend>Experience</legend>
+        {% if  cv.firma %}
+            <p>Firm: {{cv.firma}}</p>
+        {% endif %}
+        {% if  cv.position %}
+            <p>Position: {{cv.position}}</p>
+        {% endif %}
+        {% if  cv.location %}
+            <p>Location: {{cv.location}}</p>
+        {% endif %}
+        {% if  cv.start_work_period %}
+            <p>Start of work: {{cv.start_work_period}}</p>
+        {% endif %}
+        {% if  cv.end_work_period%}
+            <p>End of work: {{cv.end_work_period}}</p>
+        {% endif %}
+        </fieldset><br><br>
+        <fieldset><legend>Something more?</legend>
+        {% if  cv.summary %}
+            <p>Summary: {{cv.summary}}</p>
+        {% endif %}
         </fieldset>
+
     </div>
 {% endblock %}
