@@ -32,7 +32,9 @@
 
 
 {% block profile %}
+{% if cv.author == request.user %}
     <a class="btn-lg btn-default" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon glyphicon-pencil"> Edit</span></a>
+{% endif %}
     <p></p><br>
     <div class="jumbotron">
 
