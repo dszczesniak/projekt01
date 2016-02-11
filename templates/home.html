@@ -2,6 +2,24 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron p{
+        font-size: 19px;
+      }
+
+
+
+    {% endblock %}
+</style>
 
 {% block jumbotron %}
 <!-- Main component for a primary marketing message or call to action -->
@@ -25,12 +43,51 @@
 {% block row_2 %}
 <div class="rama1">
       <ul class="lista1">
-      	<li class="li1"><a href="/myprofile"> My Profile</a></li>
       	<!-- <li class="li1"><a href="/"> Messages</a></li> -->
       	<li class="li1"><a href="/base_cv"> Base</a></li>
       	<!--<li class="li1"><a href="/"> Groups</a></li> -->
+        {% for cv in cvs %}
+      <li class="li1"><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">My Account</a></li>   
+    {% endfor %}
       </ul>
+
+
+
+
+
+
+<div id="form_document">
+    <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data" id="#form_document">
+        {% csrf_token %}
+        <div class="fileupload-buttonbar">
+            <label class="fileinput-button">
+                <span>Add files...</span>
+                {{ form.as_p }}
+                {{ image.as_p }}
+                <input type="file" name="files[]" multiple>
+            </label>
+            <button type="submit" class="start">Start upload</button>
+        </div>
+    </form>
 </div>
+
+
+
        
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="{% static 'js/jquery.uploadfile.min.js' %}"></script>
+  <script>
+    $(function()
+    {
+        $("#form_document").uploadFile({
+        url:"{% url 'home' %}",
+        fileName:"filename_file"
+        });
+    });
+    </script>
+
+
+
 
 {% endblock %}
+

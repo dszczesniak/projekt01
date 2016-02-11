@@ -17,83 +17,120 @@
         width:55%;
       }
 
-      legend{
-        font-weight: bold;
-      }
-
       h2{
         font-weight: bold;
-        text-align: center;
-        font-size: 33px;
+        font-size: 26px;
       }
+
+      .ramka{
+        border-style: groove;
+        border-radius: 10px;
+        padding: 15px;
+      }
+
+      .boczne{
+        font-size: 43px;
+        text-align: right;
+        position: fixed;
+        display: inherit;
+        list-style-type:none;
+        padding-left: 785px;
+      }
+
+      .btn-lg{
+        font-size: 25px;
+      }
+
 
     {% endblock %}
 </style>
 
 
 {% block profile %}
-{% if cv.author == request.user %}
-    <a class="btn-lg btn-default" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon glyphicon-pencil"> Edit</span></a>
-{% endif %}
-    <p></p><br>
-    <div class="jumbotron">
+    {% if cv.author == request.user %}
+        <ul class="boczne">
+            <li class="boczne_2" ><a class="btn-lg btn-warning" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon glyphicon-pencil"> Update your basic information</span></a></li>
+            <li class="boczne_2"><a class="btn-lg btn-warning" href="/edit_profile"><span class="glyphicon glyphicon-pencil"> Update your Education part</span></a></li>
+            <li ><a class="btn-lg btn-warning" href="/update_exp"><span class="glyphicon glyphicon-pencil"> Update your Experience part</span></a></li>
+        </ul>
+    {% endif %}
+        <p></p><br>
+        <div class="jumbotron">
+            
+            <h2>Curriculum Vitae</h2><br>
 
-        <h2>Curriculum Vitae</h2><hr>
-        <p>Full name: {{ cv.name }} {{cv.surname}}</p>
-        <p>Adress: {{ cv.address }}</p>
-        {% if cv.birth_date %}
-            <p>Birth date: {{ cv.birth_date }}</p>
-        {% endif %}
-        <p>Tel.: {{ cv.telephone }}</p>
-        <p>E-mail: {{ cv.email }}</p><br>
-        <fieldset><legend>Information</legend>
-        <p>Skills: {{cv.skills }}</p>
-        {% if cv.specialization %}
-            <p>Specialization: {{cv.specialization}}</p>
-        {% endif %}
-        {% if cv.interests %}
-            <p>Interests: {{cv.interests}}</p>
-        {% endif %}
-        </fieldset><br><br>
-        <fieldset><legend>Education</legend>
-        {% if  cv.school %}
-            <p>School: {{cv.school}}</p>
-        {% endif %}
-        {% if  cv.start_learning_period %}
-            <p>Start of school: {{cv.start_learning_period}}</p>
-        {% endif %}
-        {% if  cv.end_learning_period %}
-            <p>End of school: {{cv.end_learning_period}}</p>
-        {% endif %}
-        {% if  cv.title %}
-            <p>Title: {{cv.title}}</p>
-        {% endif %}
-        {% if  cv.field_of_study %}
-            <p>Field of study: {{cv.field_of_study}}</p>
-        {% endif %}
-        </fieldset><br><br>
-        <fieldset><legend>Experience</legend>
-        {% if  cv.firma %}
-            <p>Firm: {{cv.firma}}</p>
-        {% endif %}
-        {% if  cv.position %}
-            <p>Position: {{cv.position}}</p>
-        {% endif %}
-        {% if  cv.location %}
-            <p>Location: {{cv.location}}</p>
-        {% endif %}
-        {% if  cv.start_work_period %}
-            <p>Start of work: {{cv.start_work_period}}</p>
-        {% endif %}
-        {% if  cv.end_work_period%}
-            <p>End of work: {{cv.end_work_period}}</p>
-        {% endif %}
-        </fieldset><br><br>
-        <fieldset><legend>Something more?</legend>
+            {% if cv.thumbnail %}
+                <p><img src="/media/{{cv.thumbnail}}" width="200" /></p>
+            {% endif %}
+
+            <h3>Information</h3>
+            <div class="ramka">
+                <p><b>Full name:</b> {{ cv.name }} {{cv.surname}}</p>
+                <p><b>Adress:</b> {{ cv.address }}</p>
+                {% if cv.birth_date %}
+                    <p><b>Birth date:</b> {{ cv.birth_date }}</p>
+                {% endif %}
+                <p><b>Tel.: </b>{{ cv.telephone }}</p>
+                <p><b>E-mail:</b> {{ cv.email }}</p>
+            </div><br>
+
+
+            <div class="ramka">
+                <p><b>Skills: </b>{{cv.skills }}</p>
+                {% if cv.specialization %}
+                    <p><b>Specialization:</b> {{cv.specialization}}</p>
+                {% endif %}
+                {% if cv.interests %}
+                    <p><b>Interests:</b> {{cv.interests}}</p>
+                {% endif %}
+            </div>
+
+            <h3>Education</h3>
+ 
+            <!-- start first card -->
+                {% if user.links.all %}                          
+                    {% for link in user.links.all%}
+                    <div class="ramka">
+                        <p><b>University:</b> {{ link.university }}</p>
+                        {% if link.city_1 %}
+                            <p><b>City:</b> {{ link.city_1 }}</p>
+                        {% endif %}
+                        {% if link.grade %}
+                            <p><b>Grade:</b> {{ link.grade }}</p>
+                        {% endif %}
+                        <p><b>Field of study:</b> {{ link.field }}</p>
+                        {% if link.description_1 %}
+                            <p><b>Description:</b> {{ link.description_1 }}</p>
+                        {% endif %}
+                    </div><br>
+                    {% endfor %}
+                {% endif %}
+            <!-- end of first card -->
+
+
+        <h3>Experience</h3>
+        <!-- start first card -->
+                    {% if user.linkss.all %}                          
+                        {% for link in user.linkss.all%}
+                        <div class="ramka">
+                            <p><b>Firma:</b> {{ link.firma }}</p>
+                            {% if link.city_1 %}
+                                <p><b>City:</b> {{ link.city_2 }}</p>
+                            {% endif %}
+                            <p><b>Position:</b> {{ link.position }}</p>
+                            {% if link.description_1 %}
+                                <p><b>Description:</b> {{ link.description_2 }}</p>
+                            {% endif %}
+                        </div><br>
+                        {% endfor %}
+                    {% endif %}
+                <!-- end of first card -->
+
         {% if  cv.summary %}
-            <p>Summary: {{cv.summary}}</p>
+            <h3>Something more?</h3>
+                <div class="ramka">
+                        <p>{{cv.summary}}</p>
+                </div>
         {% endif %}
-        </fieldset>
 
-    </div>
 {% endblock %}

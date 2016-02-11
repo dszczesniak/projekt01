@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+      }
+
+      .ramka{
+        border-style: groove;
+        border-radius: 10px;
+        padding: 15px;
+      }
+
+      .link-formset{
+        padding-bottom: 5%;
+      }
+      
+      
+
+    {% endblock %}
+</style>
+
+
+{% block profile %}
+    <p></p>
+    <div class="jumbotron">
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ link_formset.management_form }}
+            {{ form.management_form }}
+            <legend style="font-size: 23px;"> Update your experience part</legend>
+            {% for link_form in link_formset %}
+                <div class="link-formset">
+                  <div style="border-style:groove; border-radius: 8px; padding: 12px 0 0 7px;"> 
+
+
+                     <p style="font-size:15px">Firma: 
+                        {{ link_form.firma }}
+                        {% if link_form.firma.errors %}
+                            {% for error in link_form.firma.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}</p>
+
+                    <p style="font-size:15px">City: 
+                        {{ link_form.city_2 }}
+                        {% if link_form.city_2.errors %}
+                            {% for error in link_form.city_2.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}</p>
+
+                     <p style="font-size:15px">Position: 
+                        {{ link_form.position }}
+                        {% if link_form.position.errors %}
+                            {% for error in link_form.position.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}</p>
+
+                    <p style="font-size:15px">Description: 
+                        {{ link_form.description_2 }}
+                        {% if link_form.description_2.errors %}
+                            {% for error in link_form.description_2.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}</p>
+
+                    {{ form }}
+
+                        </div>
+                </div>
+            {% endfor %}
+
+            {% if link_formset.non_form_errors %}
+                {% for error in link_formset.non_form_errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            <input type="submit" value="Update Profile" class="button"/>
+        </form>
+
+        <!-- Include formset plugin - including jQuery dependency -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="{% static 'js/jquery.formset.js' %}"></script>
+            <script>
+                $('.link-formset').formset({
+                    addText: 'add next',
+                    deleteText: 'remove'
+                });
+            </script>
+
+    
+  </div>
+{% endblock %}
+

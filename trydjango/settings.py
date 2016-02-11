@@ -82,10 +82,20 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.request',
+                'django.core.context_processors.static',
             ],
         },
     },
 ]
+
+
+
+TEMPLATE_CONTEXT_PROCESSORS = (  
+    'django.core.context_processors.request',
+    'django.core.context_processors.static'
+)
+
 
 WSGI_APPLICATION = 'trydjango.wsgi.application'
 
@@ -121,6 +131,9 @@ TIME_ZONE = 'Europe/Berlin'
  
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
+MEDIA_ROOT = os.path.join(BASE_DIR, "static_in_pro", "static_root")
+
+MEDIA_URL = '/media/'
 
 STATIC_URL = '/static/'
 
