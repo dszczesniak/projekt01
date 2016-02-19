@@ -41,6 +41,14 @@
         font-size: 25px;
       }
 
+      .img{
+        border-style: groove;
+        border-radius: 10px;
+        position: absolute;
+        margin-left: 435px;
+        margin-top: -100px;
+        overflow: hidden;
+      }
 
     {% endblock %}
 </style>
@@ -57,11 +65,12 @@
         <p></p><br>
         <div class="jumbotron">
             
-            <h2>Curriculum Vitae</h2><br>
-
+            <h2>Curriculum Vitae</h2> <br>
             {% if cv.thumbnail %}
-                <p><img src="/media/{{cv.thumbnail}}" width="200" /></p>
+                <p class="img"><img src="/media/{{cv.thumbnail}}" width="155" /></p>
             {% endif %}
+            <br>
+
 
             <h3>Information</h3>
             <div class="ramka">
@@ -85,46 +94,67 @@
                 {% endif %}
             </div>
 
-            <h3>Education</h3>
- 
+
             <!-- start first card -->
-                {% if user.links.all %}                          
-                    {% for link in user.links.all%}
-                    <div class="ramka">
-                        <p><b>University:</b> {{ link.university }}</p>
-                        {% if link.city_1 %}
-                            <p><b>City:</b> {{ link.city_1 }}</p>
+
+                    {% for lin in user_links %}
+
+                        {% if cv.author == lin.user %}
+
+                                <h3>Education</h3>                       
+
+                                <div class="ramka">
+                                    <p><b>University:</b> {{ lin.university }}</p>
+                                    {% if lin.city_1 %}
+                                        <p><b>City:</b> {{ lin.city_1 }}</p>
+                                    {% endif %}
+                                    {% if lin.grade %}
+                                        <p><b>Grade:</b> {{ lin.grade }}</p>
+                                    {% endif %}
+                                    <p><b>Field of study:</b> {{ lin.field }}</p>
+                                    {% if lin.study_1 %}
+                                        <p><b>Study period:</b> {{ lin.study_1 }} - {{ lin.study_2 }}</p>
+                                    {% endif %}
+                                    {% if lin.description_1 %}
+                                        <p><b>Description:</b> {{ lin.description_1 }}</p>
+                                    {% endif %}
+                                </div><br>
+
                         {% endif %}
-                        {% if link.grade %}
-                            <p><b>Grade:</b> {{ link.grade }}</p>
-                        {% endif %}
-                        <p><b>Field of study:</b> {{ link.field }}</p>
-                        {% if link.description_1 %}
-                            <p><b>Description:</b> {{ link.description_1 }}</p>
-                        {% endif %}
-                    </div><br>
+
                     {% endfor %}
-                {% endif %}
-            <!-- end of first card -->
+        <!-- end of first card -->
+        <!-- start second card -->
+
+                     {% for fir in user_firms %}
+
+                        {% if cv.author == fir.userr %}
+
+                                <h3>Experience</h3>                       
+
+                                <div class="ramka">
+                                    <p><b>Firma:</b> {{ fir.firma }}</p>
+                                    {% if fir.city_1 %}
+                                        <p><b>City:</b> {{ fir.city_2 }}</p>
+                                    {% endif %}
+                                        <p><b>Position:</b> {{ fir.position }}</p>
+                                    {% if fir.description_1 %}
+                                    {% if fir.fir_1 %}
+                                        <p><b>Study period:</b> {{ fir.fir_1 }} - {{ fir.fir_2 }}</p>
+                                    {% endif %}
+                                        <p><b>Description:</b> {{ fir.description_2 }}</p>
+                                    {% endif %}
+                                </div><br>
 
 
-        <h3>Experience</h3>
-        <!-- start first card -->
-                    {% if user.linkss.all %}                          
-                        {% for link in user.linkss.all%}
-                        <div class="ramka">
-                            <p><b>Firma:</b> {{ link.firma }}</p>
-                            {% if link.city_1 %}
-                                <p><b>City:</b> {{ link.city_2 }}</p>
-                            {% endif %}
-                            <p><b>Position:</b> {{ link.position }}</p>
-                            {% if link.description_1 %}
-                                <p><b>Description:</b> {{ link.description_2 }}</p>
-                            {% endif %}
-                        </div><br>
-                        {% endfor %}
-                    {% endif %}
-                <!-- end of first card -->
+
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                <!-- end of second card -->
+
 
         {% if  cv.summary %}
             <h3>Something more?</h3>

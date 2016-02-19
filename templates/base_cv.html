@@ -102,22 +102,47 @@
 {% block base %}
 	<div class="vvv">
 		<h2>Find someone:</h2><hr>
-		<table style="width:100%">
-		  <tr>
-		  	<th>Nr.</th>
-		    <th>Full Name</th>
-		    <th>Specialization</th>		
-		    <th>E-mail</th>
-		  </tr>
-		  {% for cv in cvs %}
+		<table id="datatable" style="width:100%">
+			<thead>
 			  <tr>
-			  	<td>{{forloop.counter}}.</td>
-			    <td><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">{{cv.name}} {{cv.surname}}</a></td>
-			    <td>{{cv.specialization}}</td>		
-			    <td>{{cv.email}}</td>
+			  	<th>Nr.</th>
+			    <th>Full Name</th>
+			    <th>Specialization</th>		
+			    <th>E-mail</th>
 			  </tr>
-		  {% endfor %}
+			 </thead>
+			 <tbody>
+			  {% for cv in cvs %}
+				  <tr>
+				  	<td>{{forloop.counter}}.</td>
+				    <td><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">{{cv.name}} {{cv.surname}}</a></td>
+				    <td>{{cv.specialization}}</td>		
+				    <td>{{cv.email}}</td>
+				  </tr>
+			  {% endfor %}
+			  </tbody>
 		</table><br>
+
+
+
+
+
+		<script src="jquery-1.11.2.js"></script>
+		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" />
+		<script type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#datatable').dataTable();
+
+			});
+		</script>
+
+
+
+
+
+
+
 	</div>
 {% endblock %}
 

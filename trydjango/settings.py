@@ -131,7 +131,7 @@ TIME_ZONE = 'Europe/Berlin'
  
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-MEDIA_ROOT = os.path.join(BASE_DIR, "static_in_pro", "static_root")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 MEDIA_URL = '/media/'
 

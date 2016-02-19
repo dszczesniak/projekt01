@@ -1,6 +1,7 @@
 import os
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError, transaction
 from django.forms.formsets import formset_factory
@@ -127,11 +128,27 @@ def edit_cv(request, pk):
 
 
 
-
+User = get_user_model()
 
 def cv_detail(request, pk):
+	user = request.user
+
 	cv = get_object_or_404(Cv, pk=pk)
-	return render(request, 'cv_detail.html', {'cv': cv})
+
+	user_links = UserLink.objects.filter()
+	user_firms = UserFirm.objects.filter()
+
+
+	# listed_users = User.objects.filter()
+
+	con = {
+			"cv": cv,
+			# "listed_users": listed_users,
+			"user_links": user_links,
+			"user_firms": user_firms,
+			}
+
+	return render(request, 'cv_detail.html', con)
 
 
 
@@ -190,18 +207,15 @@ def profile_settings(request):
 	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
 
 	# Get our existing link data for this user.  This is used as initial data.
-	user_links = UserLink.objects.filter(user=user)
+	user_links = UserLink.objects.filter(user=request.user)
 
 
-	link_data = [{'university': l.university, 'city_1': l.city_1, 'grade': l.grade, 'field': l.field, 'description_1': l.description_1,}
+	link_data = [{'university': l.university, 'city_1': l.city_1, 'grade': l.grade, 'field': l.field, 'description_1': l.description_1, 'study_1': l.study_1, 'study_2': l.study_2,}
 						for l in user_links]
 
-	#lfs = formset_factory(NameForm)
 
 	if request.method == 'POST':
 
-		#postedformset = lfs(request.POST)
-		#return HttpResponseRedirect('/edit_profile/')
 
 		link_formset = LinkFormSet(request.POST)
 
@@ -217,10 +231,12 @@ def profile_settings(request):
 				grade = link_form.cleaned_data.get('grade')
 				field = link_form.cleaned_data.get('field')
 				description_1 = link_form.cleaned_data.get('description_1')
+				study_1 = link_form.cleaned_data.get('study_1')
+				study_2 = link_form.cleaned_data.get('study_2')
 
 
 				if university and field:
-					new_obj.append(UserLink(user=user, university=university, city_1=city_1, grade=grade, field=field, description_1 = description_1))
+					new_obj.append(UserLink(user=user, university=university, city_1=city_1, grade=grade, field=field, description_1 = description_1, study_1 = study_1, study_2 = study_2))
 
 			try:
 				with transaction.atomic():
@@ -236,13 +252,13 @@ def profile_settings(request):
 				return redirect(reverse('profile_settings'))
 
 	else:
-		#form = NameForm()
+
 		link_formset = LinkFormSet(initial=link_data)
 
 	context = {
 
 		'link_formset': link_formset,
-		#'form':lfs,
+
 	}
 			
 	return render(request, 'edit_profile.html', context)
@@ -265,7 +281,7 @@ def update_exp(request):
 	user_firms = UserFirm.objects.filter(userr=userr).order_by('firma')
 
 
-	link_data = [{'firma': l.firma, 'city_2': l.city_2, 'position': l.position, 'description_2': l.description_2}
+	link_data = [{'firma': l.firma, 'city_2': l.city_2, 'position': l.position, 'description_2': l.description_2, 'fir_1': l.fir_1, 'fir_2': l.fir_2,}
 					for l in user_firms]
 
 	#lfs = formset_factory(NameForm)
@@ -288,9 +304,11 @@ def update_exp(request):
 				city_2 = link_form.cleaned_data.get('city_2')
 				position = link_form.cleaned_data.get('position')
 				description_2 = link_form.cleaned_data.get('description_2')
+				fir_1 = link_form.cleaned_data.get('fir_1')
+				fir_2 = link_form.cleaned_data.get('fir_2')
 
 				if firma and position:
-					new_objj.append(UserFirm(userr=userr, firma=firma, city_2=city_2, position=position, description_2=description_2))
+					new_objj.append(UserFirm(userr=userr, firma=firma, city_2=city_2, position=position, description_2=description_2, fir_1=fir_1, fir_2=fir_2))
 
 			try:
 				with transaction.atomic():
@@ -320,53 +338,13 @@ def update_exp(request):
 
 
 
-class UploadDocumentationFilesView(View):
-    template_name = "templates/home"
-    form_class = ProfileImageForm
-    
-    def dispatch(self, request, *args, **kwargs):
-        return View.dispatch(self, request, *args, **kwargs)       
-    def post(self, request, *args, **kwargs):
-        # Check if there is possiblity for removing files
-        error = False
-        f = request.FILES.get(u'files[]')
+def baz(request):
 
-        temp_path = os.path.join(settings.MEDIA_ROOT, DOC_TEMP_FOLDER)
-        
-        if f.size > MAX_DOC_SIZE:
-            error = "maxFileSize"
-        response_data = {
-            'name': f.name,
-            'size': f.size,
-            'type': f.content_type
-            }
-        if error:
-            response_data["error"] = error
-            return JsonResponse(response_data)
-        
-        if not os.path.exists(temp_path):
-            os.makedirs(temp_path)
-        
-        name = unicode(uuid.uuid4())
-        extension = f.name.split(".")[-1]
-        
-        filename_file = "{0}.{1}".format(name, extension)
-        
-        filename = os.path.join(temp_path, filename_file)
-        
-        destination = open(filename, "wb+")
-        
-        for chunk in f.chunks():
-            destination.write(chunk)
-            
-        destination.close()
-        
-        response_data['name'] = filename_file
-        response_type = "application/json"
-        
-        if "text/html" in request.META["HTTP_ACCEPT"]:
-            response_type = "text/html"
-            
-        response_data['type'] = response_type
-        return JsonResponse(response_data)
+	cvs = Cv.objects.filter()
 
+	con = {
+			"cvs": cvs,
+
+		}
+
+	return render(request, 'baz.html', con)

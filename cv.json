@@ -1,0 +1,47 @@
+[
+{
+    "fields": {
+        "interests": "Gym, sport, swimming, books, music.",
+        "surname": "Szczesniak",
+        "name": "Damian",
+        "author": 1,
+        "skills": "HTML5, Css3, Python, Django, SQL",
+        "telephone": 791622548,
+        "summary": "Chetny do pracy !",
+        "thumbnail": "uploaded_files/1455556396_37_12592393_1250110731671788_8418408865220782322_n.jpg",
+        "address": "Nalkowskiej 21/80 43-100 Tychy",
+        "birth_date": "1993-08-06",
+        "email": "dszcz@poczta.pl",
+        "specialization": "Web Developer"
+    },
+    "model": "proj.cv",
+    "pk": 1
+},
+{
+    "fields": {
+        "study_1": "1990",
+        "description_1": "Opis",
+        "city_1": "Sosnowiec",
+        "grade": "",
+        "university": "Uniwersytet Slaski",
+        "field": "Informatyka",
+        "study_2": "1955",
+        "user": 1
+    },
+    "model": "proj.userlink",
+    "pk": 179
+},
+{
+    "fields": {
+        "description_2": "",
+        "userr": 1,
+        "firma": "Firma Testowa",
+        "city_2": "Miasto",
+        "fir_1": "0",
+        "position": "Programmer",
+        "fir_2": "0"
+    },
+    "model": "proj.userfirm",
+    "pk": 4
+}
+]

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from time import time
+from datetime import datetime
 
 
 def get_upload_file_name(instance, filename):
@@ -25,7 +26,7 @@ class Cv(models.Model):
 	author = models.ForeignKey('auth.User')
 	name = models.CharField(max_length=25, null = True)
 	surname = models.CharField(max_length=25, null = True)
-	address = models.CharField(max_length=100)
+	address = models.CharField(max_length=100, blank=True)
 	telephone = models.IntegerField()
 	birth_date = models.DateField(blank=True, null=True)
 	email = models.EmailField(max_length=50, null=True)
@@ -33,7 +34,7 @@ class Cv(models.Model):
 	specialization = models.CharField(max_length=30, blank=True, null=True)
 	interests = models.TextField(blank=True, null=True)
 	summary = models.TextField(blank=True, null=True)
-	thumbnail = models.FileField(upload_to=get_upload_file_name)
+	thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
 
 
 	def zapisz(self):
@@ -65,7 +66,6 @@ class Search(models.Model):
 
 
 
-
 class UserLink(models.Model):
 
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=('user'), related_name='links')
@@ -75,6 +75,8 @@ class UserLink(models.Model):
 	field = models.CharField(max_length = 50)
 	city_1 = models.CharField(max_length=50)
 	description_1 = models.TextField(max_length=350)
+	study_1 = models.CharField(max_length=5)
+	study_2 = models.CharField(max_length=5)
 
 
 	def __str__(self):
@@ -97,6 +99,8 @@ class UserFirm(models.Model):
 	position = models.CharField(max_length=50)
 	city_2 = models.CharField(max_length=50)
 	description_2 = models.CharField(max_length=350)
+	fir_1 = models.CharField(max_length=5)
+	fir_2 = models.CharField(max_length=5)
 
 
 

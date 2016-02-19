@@ -40,10 +40,9 @@ class SearchForm(forms.ModelForm):
 		fields = ('sort', 'search_text',)
 
 
-
+YEARS_CHOICES = tuple((str(n), str(n)) for n in range(1955, datetime.now().year + 1))
 
 class LinkForm(forms.Form):
-
 	#education
 
 	university = forms.CharField(
@@ -66,6 +65,16 @@ class LinkForm(forms.Form):
 		max_length = 500,
 		widget=forms.Textarea(attrs={'placeholder': ('Add some details about your education...'),'rows': '5', 'cols': '40',}), required=False)
 
+
+	study_1 = forms.ChoiceField(
+		choices=YEARS_CHOICES,
+		required=False)
+
+	study_2 = forms.ChoiceField(
+		choices=YEARS_CHOICES,
+		required=False)
+
+
 	#experience
 
 	firma = forms.CharField(
@@ -84,9 +93,17 @@ class LinkForm(forms.Form):
 		max_length = 500,
 		widget=forms.Textarea(attrs={'placeholder': ('Add some details about your eexperience...'),'rows': '5', 'cols': '40',}), required=False)
 
+	fir_1 = forms.ChoiceField(
+		choices=YEARS_CHOICES,
+		required=False)
+
+	fir_2 = forms.ChoiceField(
+		choices=YEARS_CHOICES,
+		required=False)
 
 
-YEARS_CHOICES = tuple((str(n), str(n)) for n in range(1925, datetime.now().year + 1))
+
+
 
 class NameForm(forms.Form):
 	study1 = forms.ChoiceField(label="Period of study",	choices=YEARS_CHOICES)

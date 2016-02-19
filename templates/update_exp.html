@@ -77,6 +77,21 @@
                             {% endfor %}
                         {% endif %}</p>
 
+                    <p style="font-size:15px">Work period: 
+                        {{ link_form.fir_1 }}
+                        {% if link_form.fir_1.errors %}
+                            {% for error in link_form.fir_1.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}
+                        -
+                        {{ link_form.fir_2 }}
+                        {% if link_form.fir_2.errors %}
+                            {% for error in link_form.fir_2.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}</p>
+
                     <p style="font-size:15px">Description: 
                         {{ link_form.description_2 }}
                         {% if link_form.description_2.errors %}
