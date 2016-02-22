@@ -2,6 +2,14 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
+{% block css %}
+
+	{{ block.super }}
+
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css"/>
+
+{% endblock %}
+
 
 {% block base %}
 
@@ -489,10 +497,22 @@
         </tbody>
     </table>
 
+{% endblock %}
 
 
+{% block javascript %}
 
+	{{ block.super }} <!-- This makes sure the script form base.html are loaded. It's almost like supeerclassing -->
 
+	<script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	    <script>
+	      $(document).ready(function() {
+	        $('#example').DataTable();
+	      });
+	</script>
 
 {% endblock %}
+
+
+
 

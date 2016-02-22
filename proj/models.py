@@ -37,6 +37,11 @@ class Cv(models.Model):
 	thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
 
 
+	def calculate_age(self):
+		import datetime
+		return int((datetime.datetime.now() - self.birth_date).days / 365.25  )
+	age = property(calculate_age)
+
 	def zapisz(self):
 		self.save()
 
