@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:30%;
+        opacity: 0.9;
+        padding: 2px;
+      }
+
+    {% endblock %}
+</style>
+
+
+
+{% block profile %}
+
+  <br>
+      <div class="jumbotron">
+        <h4>Create your new group !</h4>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="save btn btn-default">Go!</button>
+        </form>
+      </div>
+
+{% endblock %}

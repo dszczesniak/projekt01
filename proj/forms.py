@@ -1,6 +1,6 @@
 from django import forms
 from .models import SignUp
-from .models import Cv, Search
+from .models import Cv, Search, Group
 from django.forms.formsets import BaseFormSet
 from datetime import datetime
 
@@ -180,4 +180,12 @@ class BaseLinkFormSet(BaseFormSet):
 
 
 class ProfileImageForm(forms.Form):
-    f = forms.FileField(label='Select a profile Image')
+	f = forms.FileField(label='Select a profile Image')
+
+
+
+class GroupForm(forms.ModelForm):
+
+	class Meta:
+		model = Group
+		fields = ('name',)

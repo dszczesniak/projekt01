@@ -13,10 +13,10 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from .forms import ContactForm, SignUpForm, CvForm, SearchForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, NameForm
-from .forms import ProfileImageForm
+from .forms import ProfileImageForm, GroupForm
 from .models import ProfileImage
 from .models import UserLink, UserFirm
-from .models import Cv
+from .models import Cv, Person, Group, Membership
 from .models import Search
 from django.views.generic import View, FormView, DetailView, ListView
 
@@ -139,7 +139,7 @@ def cv_detail(request, pk):
 	user_firms = UserFirm.objects.filter()
 
 
-	# listed_users = User.objects.filter()
+	# listed_users = User.objects.all()
 
 	con = {
 			"cv": cv,
@@ -158,40 +158,9 @@ def cv_detail(request, pk):
 
 @login_required
 def base_cv(request):
-	if request.method == 'POST':
-		form = SearchForm(request.POST)
-		if form.is_valid():
-			search_text = form.cleaned_data.get("search_text")
-			sort = form.cleaned_data.get("sort")
 
-			if sort == "N":
-				cvs = Cv.objects.filter(name = search_text)
-			elif sort == "S":
-				cvs = Cv.objects.filter(surname = search_text)
-			elif sort == "E":
-				cvs = Cv.objects.filter(email = search_text)
-			else:
-				pass
-
-			con = {
-			"form": form,
-			"cvs": cvs,
-			}
-
-			return render(request, 'base_cv.html', con)
-
-	else:
-		form = SearchForm()
-		cvs = Cv.objects.filter()
-
-		con = {
-			"cvs": cvs,
-			"form": form,
-			}
-
-		return render(request, 'base_cv.html', con)
-
-	return render(request, 'base_cv.html', {'form': form})
+	con = {'cvs': Cv.objects.all()}
+	return render(request, 'base_cv.html', con)
 
 
 
@@ -338,13 +307,25 @@ def update_exp(request):
 
 
 
-def baz(request):
+@login_required
+def groups(request):
 
-	cvs = Cv.objects.filter()
+	if request.method == "POST":
+		form = GroupForm(request.POST)
+		if form.is_valid():
+			for x in form:
+				name = x.cleaned_data.get('name')
 
-	con = {
-			"cvs": cvs,
 
-		}
+				name = Group.objects.create(name=name)
+				per = Person.objects.create(name=request.user)
+				m1 = Membership(person=per, group=name, date_joined=date(1999, 8, 8), invite_reason="Needed programmer.")
+				m1.save()
 
-	return render(request, 'baz.html', con)
+
+
+				return redirect('groups.html', )
+	else:
+		form = GroupForm()
+
+	return render(request, 'groups.html', )

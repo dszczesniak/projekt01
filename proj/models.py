@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from time import time
 from datetime import datetime
+import datetime
 
 
 def get_upload_file_name(instance, filename):
@@ -37,10 +38,9 @@ class Cv(models.Model):
 	thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
 
 
-	def calculate_age(self):
-		import datetime
-		return int((datetime.datetime.now() - self.birth_date).days / 365.25  )
-	age = property(calculate_age)
+	@property
+	def age(self):
+		return int((datetime.datetime.now().date() - self.birth_date).days / 365.25 )
 
 	def zapisz(self):
 		self.save()
@@ -119,5 +119,35 @@ class UserFirm(models.Model):
 		super(UserFirm, self).save(*args, **kwargs)
 
 
+
+
 class ProfileImage(models.Model):
-    f = models.FileField(upload_to='profile/%Y/%m/%d')
+	f = models.FileField(upload_to='profile/%Y/%m/%d')
+
+
+
+
+
+#Grupowanie
+
+class Person(models.Model):
+	name = models.CharField(max_length=128)
+
+	def __str__(self):              # __unicode__ on Python 2
+		return self.name
+
+
+class Group(models.Model):
+	name = models.CharField(max_length=128)
+	leader = models.CharField(max_length=50)
+	members = models.ManyToManyField(Person, through='Membership')
+
+	def __str__(self):              # __unicode__ on Python 2
+		return self.name
+
+
+class Membership(models.Model):
+	person = models.ForeignKey(Person)
+	group = models.ForeignKey(Group)
+	date_joined = models.DateField()
+	invite_reason = models.CharField(max_length=64)

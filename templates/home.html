@@ -47,8 +47,9 @@
       	<li class="li1"><a href="/base_cv"> Base</a></li>
       	<!--<li class="li1"><a href="/"> Groups</a></li> -->
         {% for cv in cvs %}
-      <li class="li1"><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">My Account</a></li>   
-    {% endfor %}
+          <li class="li1"><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">My CV</a></li>   
+        {% endfor %}
+        <li class="li1"><a href="/"> Groups</a></li>
       </ul>
 
 
@@ -74,19 +75,6 @@
 -->
 
 
-
-       
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script src="{% static 'js/jquery.uploadfile.min.js' %}"></script>
-  <script>
-    $(function()
-    {
-        $("#form_document").uploadFile({
-        url:"{% url 'home' %}",
-        fileName:"filename_file"
-        });
-    });
-    </script>
 
 
 
