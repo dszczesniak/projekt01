@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+        opacity: 0.9;
+      }
+
+      h3{
+
+        text-align: center;
+      }
+      
+
+    {% endblock %}
+</style>
+
+
+
+{% block profile %}
+<div class="jumbotron">
+  <form method="POST" action=''>
+  {% csrf_token %}
+  {% for c in cv %}
+    <h3>Send a message to {{c.name}} {{c.surname}}</h3><br>
+  {% endfor %}
+  {{ form|crispy }}
+
+  <input type='submit' value='Submit' />
+
+
+
+  </form>
+
+</div>
+
+{% endblock %}

@@ -4,3 +4,4 @@ staticfiles
 local_settings.py
 db.postgresql
 *.py[co]
+*.pyc

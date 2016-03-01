@@ -5,10 +5,10 @@ from django.forms.formsets import BaseFormSet
 from datetime import datetime
 
 
-class ContactForm(forms.Form):
-	full_name = forms.CharField()
-	email = forms.EmailField()
-	message = forms.CharField()
+class SendMessageForm(forms.Form):
+
+	message = forms.CharField(
+		widget=forms.Textarea(attrs={'rows': '5', 'cols': '60',}))
 	
 
 

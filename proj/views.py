@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from .forms import ContactForm, SignUpForm, CvForm, SearchForm
+from .forms import SendMessageForm, SignUpForm, CvForm, SearchForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, NameForm
 from .forms import ProfileImageForm, GroupForm
 from .models import ProfileImage
@@ -19,6 +19,7 @@ from .models import UserLink, UserFirm
 from .models import Cv, Person, Group, Membership
 from .models import Search
 from django.views.generic import View, FormView, DetailView, ListView
+from datetime import datetime
 
 
 # Create your views here.
@@ -26,6 +27,7 @@ def home(request):
 
 	if request.user.is_authenticated():
 		cvs = Cv.objects.filter(author = request.user)
+
 		if cvs:
 			con = {
 				"cvs": cvs,
@@ -39,7 +41,7 @@ def home(request):
 				if form.is_valid():
 					cv = form.save(commit=False)
 					cv.author = request.user
-					cv.save()
+					cv.zapisz()
 					return redirect('proj.views.cv_detail', pk=cv.pk)
 			else:
 				form = CvForm()
@@ -52,31 +54,40 @@ def home(request):
 
 
 
-def contact(request):
-	title = 'Contact Us'
-	form = ContactForm(request.POST or None)
+def send_message(request, pk):
+
+	form = SendMessageForm(request.POST or None)
+	cv = Cv.objects.filter(author = request.user)
+	cvs = get_object_or_404(Cv, pk=pk)
+
 	if form.is_valid():
 		
-		email = form.cleaned_data.get("email")
-		message = form.cleaned_data.get("message")
-		full_name = form.cleaned_data.get("full_name")
+		form_email = form.cleaned_data.get("email")
+		form_message = form.cleaned_data.get("message")
 
 
-		subject = 'Site_contact_form' 
+		subject = 'Friend request from CvFinder' 
 		from_emial = settings.EMAIL_HOST_USER
-		to_email = [from_emial, 'youtheremail@gmail.com']
-		contact_message = "%s: %s via %s" %(full_name, message, email)
+		for c in cv:
+			start = 'Message from: '+c.email
+			end = c.name+" "+c.surname
+
+		
+		
+
+		contact_message = "%s: \n\n%s \n\ngreetings, %s" %(start, form_message, end)
 
 
-		send_mail(subject, contact_message, from_emial, to_email, fail_silently=True)
+		send_mail(subject, contact_message, from_emial, to_email, fail_silently=False)
 
 
 	con = {
 		"form": form,
-		"title": title,
+		"cv": cv,
+		"cvs": cvs,
 	}
 
-	return render(request, "forms.html", con)
+	return render(request, "send_message.html", con)
 
 
 
@@ -313,19 +324,16 @@ def groups(request):
 	if request.method == "POST":
 		form = GroupForm(request.POST)
 		if form.is_valid():
-			for x in form:
-				name = x.cleaned_data.get('name')
+
+			grupa = Group.objects.create(name="grupa")
+			per = Person.objects.create(name=request.user)
+			m1 = Membership(person=per, group=grupa, date_joined=(1999, 8, 8), invite_reason="Needed programmer.")
+			form.save()
 
 
-				name = Group.objects.create(name=name)
-				per = Person.objects.create(name=request.user)
-				m1 = Membership(person=per, group=name, date_joined=date(1999, 8, 8), invite_reason="Needed programmer.")
-				m1.save()
+			return render(request, 'groups.html', {'form':form})
 
-
-
-				return redirect('groups.html', )
 	else:
 		form = GroupForm()
 
-	return render(request, 'groups.html', )
+	return render(request, 'groups.html', {'form': form})
