@@ -139,7 +139,6 @@ class Person(models.Model):
 
 class Group(models.Model):
 	name = models.CharField(max_length=128)
-	leader = models.CharField(max_length=50)
 	members = models.ManyToManyField(Person, through='Membership')
 
 	def __str__(self):              # __unicode__ on Python 2
@@ -148,6 +147,100 @@ class Group(models.Model):
 
 class Membership(models.Model):
 	person = models.ForeignKey(Person)
+	leader = models.BooleanField(default=False)
 	group = models.ForeignKey(Group)
-	date_joined = models.DateField()
-	invite_reason = models.CharField(max_length=64)
+
+
+
+
+
+
+
+
+class Skill(models.Model):
+	"""
+	Represents a skill in the community.
+	"""
+	name = models.CharField(('name'), max_length=100, unique=True)
+	owner = models.ManyToManyField(settings.AUTH_USER_MODEL,
+									through='UserSkill',
+									verbose_name=('owner'))
+
+	class Meta:
+		verbose_name = ('skill')
+		verbose_name_plural = ('skills')
+
+	def __str__(self):
+		return self.name
+
+
+class UserSkill(models.Model):
+	"""
+	How proficient an individual user is at a particular skill.
+	This model joins User and Skill ('through' table).
+	"""
+	BEGINNER = 10
+	INTERMEDIATE = 20
+	ADVANCED = 30
+	EXPERT = 40
+
+	PROFICIENCY_CHOICES = (
+ 		('', '---------'),
+		(BEGINNER, ('Beginner')),
+		(INTERMEDIATE, ('Intermediate')),
+		(ADVANCED, ('Advanced')),
+		(EXPERT, ('Expert')),
+	)
+
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=("user"))
+	skill = models.ForeignKey(Skill, verbose_name=('skill'))
+	proficiency = models.IntegerField(('proficiency'),
+									choices=PROFICIENCY_CHOICES,
+									default=BEGINNER)
+
+	def get_proficiency_percentage(self):
+		"""
+		Return a user's profiency in a particular skill as a percentage,
+		based on the position of the proficiency in PROFICIENCY_CHOICES.
+		"""
+		choice_values = [choice[0] for choice in self.PROFICIENCY_CHOICES]
+		if '' in choice_values:
+			choice_values.remove('')  # Remove the empty proficiency choice
+		choice_values.sort()  # Ensure values are in the correct order
+
+		value = choice_values.index(self.proficiency) + 1
+		factor = 100 / len(choice_values)
+		percentage = round(value * factor)
+
+		return percentage
+
+	class Meta:
+		verbose_name = ('user skill')
+		verbose_name_plural = ('user skills')
+		unique_together = ('user', 'skill')
+
+	def __str__(self):
+		return '{} - {}'.format(self.user.get_name(), self.skill.name)
+
+
+
+
+
+
+
+class SkillMod(models.Model):
+
+	userrr = models.ForeignKey(settings.AUTH_USER_MODEL,
+							verbose_name=('userrr'),
+							related_name='linksss')
+
+	skil = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.skil
+
+	def save(self, *args, **kwargs):
+		"""
+		Attempt to match a user link to a recognised brand (LinkBrand).
+		"""
+		super(SkillMod, self).save(*args, **kwargs)

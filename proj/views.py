@@ -12,11 +12,11 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from .forms import SendMessageForm, SignUpForm, CvForm, SearchForm
-from .forms import LinkForm, BaseLinkFormSet, ProfileForm, NameForm
+from .forms import LinkForm, BaseLinkFormSet, ProfileForm, NameForm, BaseSkillFormSet, SkillForm
 from .forms import ProfileImageForm, GroupForm
 from .models import ProfileImage
 from .models import UserLink, UserFirm
-from .models import Cv, Person, Group, Membership
+from .models import Cv, Person, Group, Membership, Skill, UserSkill, SkillMod
 from .models import Search
 from django.views.generic import View, FormView, DetailView, ListView
 from datetime import datetime
@@ -62,29 +62,26 @@ def send_message(request, pk):
 
 	if form.is_valid():
 		
-		form_email = form.cleaned_data.get("email")
 		form_message = form.cleaned_data.get("message")
 
-
-		subject = 'Friend request from CvFinder' 
+		subject = 'CvFinder - Message from user' 
 		from_emial = settings.EMAIL_HOST_USER
 		for c in cv:
 			start = 'Message from: '+c.email
 			end = c.name+" "+c.surname
 
-		
-		
+		to_email = [cvs.email]
 
 		contact_message = "%s: \n\n%s \n\ngreetings, %s" %(start, form_message, end)
 
-
 		send_mail(subject, contact_message, from_emial, to_email, fail_silently=False)
 
+		return redirect('proj.views.cv_detail', pk=cvs.pk)
 
 	con = {
 		"form": form,
 		"cv": cv,
-		"cvs": cvs,
+		"cvs": cvs
 	}
 
 	return render(request, "send_message.html", con)
@@ -320,20 +317,275 @@ def update_exp(request):
 
 @login_required
 def groups(request):
+	user = request.user
+	
 
-	if request.method == "POST":
+	if request.method == "POST" and 'create' in request.POST:  # ukazanie formy do tworzenia grupy oraz wyswietlenie wszystkich dostepnych grup
+		cvs = Cv.objects.all()
+		cv = Cv.objects.filter(author = request.user)
 		form = GroupForm(request.POST)
 		if form.is_valid():
-
-			grupa = Group.objects.create(name="grupa")
-			per = Person.objects.create(name=request.user)
-			m1 = Membership(person=per, group=grupa, date_joined=(1999, 8, 8), invite_reason="Needed programmer.")
-			form.save()
+			formm = form.save(commit=False)
 
 
-			return render(request, 'groups.html', {'form':form})
+			p = Person.objects.get_or_create(name=request.user)[0]
 
-	else:
+			num_g = Group.objects.filter(name = formm.name).count()
+
+			if num_g >= 1:
+				messages.error(request, 'A group with the same name already exists.')
+			else:
+				g = Group.objects.create(name = formm.name)
+				m = Membership.objects.create(person=p, group=g, leader=True)
+			
+
+
+
+
+			gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
+			per = Person.objects.all()
+			mem = Membership.objects.all()  
+
+			context = {
+			'gr': gr,
+			'per':per,
+			'mem':mem,
+			'form': form,
+			'cv':cv,
+			'cvs':cvs,
+		
+			}
+			return redirect(reverse('groups'), context)
+
+
+
+
+	elif request.method == "POST" and 'leave' in request.POST:
+
+		cvs = Cv.objects.all()
+		cv = Cv.objects.filter(author = request.user)
 		form = GroupForm()
 
-	return render(request, 'groups.html', {'form': form})
+		gr = Group.objects.filter(members__name=request.user)
+
+		#definiowanie
+		p = Person.objects.get(name=request.user)
+		gd = Group.objects.get(name=request.POST['leave'])
+		#usuwanie
+		m = Membership.objects.filter(group = gd, person= p, leader = False).delete()  # odejscie z grupy / usuwa jednego uzytkownika - jego poloaczenie - tego zalogowanego
+
+		form = GroupForm()
+		context = {
+			'gd': gd,
+			'cv':cv,
+			'cvs':cvs,
+			'gr':gr,
+			'form': form,
+			
+
+			}
+
+		return redirect(reverse('groups'), context)
+
+
+
+
+	elif request.method == "POST" and 'delete' in request.POST:   # usuwanie calej grupy jako leader
+
+		cvs = Cv.objects.all()
+		cv = Cv.objects.filter(author = request.user)
+		form = GroupForm()
+		for c in cv:
+			gr = Group.objects.filter(members__name=request.user)
+
+		#definiowanie
+		p = Person.objects.filter(name=request.user)
+		gd = Group.objects.get(name=request.POST['delete'])
+		#usuwanie
+		m = Membership.objects.filter(group = gd, person= p, leader = True)
+		for z in m:
+			if z.leader == True:
+				gdd = Group.objects.get(name=request.POST['delete']).delete() 
+			else:
+				gdd = Group.objects.get(name=request.POST['delete']) 
+				
+		
+
+		form = GroupForm()
+
+		context = {
+			'gd': gd,
+			'cv':cv,
+			'cvs':cvs,
+			'gr':gr,
+			'form': form,
+		
+			
+			}
+
+		return redirect(reverse('groups'), context)
+
+
+
+
+
+	else:								# wyswietlenie wszystkich dostepnych grup
+		cvs = Cv.objects.all()
+		cv = Cv.objects.filter(author = request.user)
+		per = Person.objects.all()
+		gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
+		perr = Person.objects.filter(name=request.user)
+
+		mem = Membership.objects.filter(group = gr, person = perr)
+		form = GroupForm()
+		
+
+		context = {
+			'gr': gr,
+			'per':per,
+			'mem':mem,
+			'form': form,
+			'cvs':cvs,
+			'cv':cv,
+		}
+
+		return render(request, 'groups.html', context)
+
+
+
+
+
+
+
+@login_required
+def choose_group(request, pk):
+
+	if request.method == "POST":
+
+		cvs = get_object_or_404(Cv, pk=pk)
+		g = Group.objects.get(name=request.POST['group'])
+		
+		p = Person.objects.create(name=cvs.author)
+		m = Membership.objects.create(person=p, group=g, leader=False)
+
+
+		return redirect( 'proj.views.cv_detail', pk=cvs.pk )
+
+
+
+
+	else:
+		cv = Cv.objects.filter(author = request.user)
+		cvs = get_object_or_404(Cv, pk=pk)
+		gr = Group.objects.filter(members__name=request.user)
+
+		context = {
+
+			'gr':gr,
+			'cvs':cvs,
+			'cv':cv
+		}
+
+		return render(request, 'choose_group.html', context)
+
+
+
+
+
+
+
+
+
+
+
+@login_required
+def skill_settings(request):
+	"""
+	Allows a user to update their own profile.
+	"""
+	userrr = request.user
+
+	#has_skills = Skill.objects.count() > 0
+
+	SkillFormSet = formset_factory(SkillForm, formset=BaseSkillFormSet)
+
+	user_skills = UserSkill.objects.filter(user=request.user).order_by('skill__name')
+	skill_data = [{'skill': s.skill, 'proficiency': s.proficiency}
+				for s in user_skills]
+
+	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
+
+	user_links = SkillMod.objects.filter(userrr=userrr)
+	link_data = [{'skil': l.skil}
+				for l in user_links]
+
+	if request.method == 'POST':
+		skill_formset = SkillFormSet(request.POST, prefix='skill')
+		link_formset = LinkFormSet(request.POST, prefix='link')
+
+		forms = [link_formset, skill_formset]
+
+
+
+		if skill_formset.is_valid():
+
+			objj = []
+			objj2 = []
+
+
+			for link_form in link_formset:
+				skil = link_form.cleaned_data.get('skil')
+
+				objj.append(SkillMod(userrr=userrr, skil=skil))
+
+			for x in skill_formset:
+				proficiency = x.cleaned_data.get('proficiency')
+
+				objj2.append(UserSkill(user=request.user, proficiency=proficiency))
+
+
+			try:
+				with transaction.atomic():
+					SkillMod.objects.filter(userrr=userrr).delete()
+					SkillMod.objects.bulk_create(objj)
+
+					UserSkill.objects.filter(user=request.user).delete()
+					UserSkill.objects.bulk_create(objj2)
+
+					messages.success(request, 'You have updated your profile.')
+
+			except IntegrityError:
+				messages.error(request, 'There was an error.')
+				return redirect(reverse('skill_settings'))
+
+	else:
+		skill_formset = SkillFormSet(initial=skill_data, prefix='skill')
+		link_formset = LinkFormSet(initial=link_data, prefix='link')
+
+
+
+
+
+
+			#save_skills(request, user, skill_formset)
+
+			#save_links(request, user, link_formset)
+
+			#user_links = SkillMod.objects.filter(userrr=userrr)
+			##match_link_to_brand(user_links)
+
+			#site = get_current_site(request)
+			#messages.success(request, _(
+				#'Your {} profile has been updated.'.format(site.name)))
+
+	#else:
+		#skill_formset = SkillFormSet(initial=skill_data, prefix='skill')
+		#link_formset = LinkFormSet(initial=link_data, prefix='link')
+
+	context = {
+		'skill_formset': skill_formset,
+		'link_formset': link_formset,
+		#'has_skills': has_skills,
+	}
+
+	return render(request, 'skill_settings.html', context)

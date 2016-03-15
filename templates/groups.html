@@ -16,6 +16,11 @@
         width:30%;
         opacity: 0.9;
         padding: 2px;
+        
+      }
+
+      h3{
+        text-align: center;
       }
 
     {% endblock %}
@@ -27,12 +32,67 @@
 
   <br>
       <div class="jumbotron">
-        <h4>Create your new group !</h4>
+
+        <h4>Create a new group here:</h4>
         <form method="POST" class="post-form">
             {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="save btn btn-default">Go!</button>
+            {{ form.as_p }}
+            <button type="submit" name = "create" class="save btn btn-default">Go</button>
+            <p>
+                    {% if messages %}
+                      {% for message in messages %}
+                        <p>{{ message }}</p>
+                      {% endfor %}
+                    {% endif %}
+                    </p>
         </form>
       </div>
+
+      <!--
+
+
+      <div class="jumbotron">
+            <div class="ramka">
+            {% for p in per %}
+                <p><b>Osoba:</b> {{ p.name }}</p> 
+            {% endfor %}
+            </div><br>
+      </div>
+ 
+      
+
+            {% for m in mem %}
+            <div class="jumbotron">
+              <br>
+                <p><b>Name of group:</b> {{ m.group }} </p> 
+
+                <p><b>Member:</b> {{ m.person }} </p>
+              <br>
+            </div>
+            {% endfor %}
+    --> 
+              {% for g in gr %}
+               <div class="jumbotron">
+                  <form method="POST" class="post-form"> {% csrf_token %}
+                  <p><b>GROUP:</b> {{g.name}}</p>
+
+                  {% for member in g.members.all %}
+
+                  <p><b>Member:</b> {{member.name}} </p>
+
+                  {% endfor %}
+                  {% for z in mem %}
+                    {% if z.leader == False %}
+                      <button type="submit" name = "leave"  value = "{{g.name}}" class="save btn btn-default">Leave</button>
+                    {% elif z.leader == True %}
+                      <button type="submit" name = "delete"  value = "{{g.name}}" class="save btn btn-default">Delete</button>
+                    {% endif %}
+                  {% endfor %}
+                  </form>
+               </div>
+
+              {% endfor %}
+           
+       
 
 {% endblock %}

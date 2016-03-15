@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+        opacity: 0.9;
+      }
+
+      .ramka{
+        border-style: groove;
+        border-radius: 10px;
+        padding: 15px;
+      }
+
+      .link-formset{
+        padding-bottom: 5%;
+      }
+      
+      
+
+    {% endblock %}
+</style>
+
+
+{% block profile %}
+    <p></p>
+    <div class="jumbotron">
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+            <p>Heloooo</p>
+
+
+                        {{ link_formset.management_form }}
+                        {{ skill_formset.management_form }}
+                        {{ form.management_form }}
+
+                         <div class="link-formset">
+                            <div style="border-style:groove; border-radius: 8px; padding: 12px 0 0 7px;"> 
+                        {% for link_form in link_formset %}
+
+                            <p style="font-size:15px">Firma: 
+                            {{ link_form.skil }}
+                            {% if link_form.skil.errors %}
+                                {% for error in link_form.skil.errors %}
+                                    {{ error|escape }}
+                                {% endfor %}
+                            {% endif %}</p>
+
+                        {% endfor %}
+
+
+
+                        {% for form in skill_formset %}
+                            
+                            {{ form.proficiency }}
+
+                        {% endfor %}
+
+                            </div>
+                        </div>
+
+
+                        {% if skill_formset.non_form_errors %}
+                            <div>
+                                <span class="form-error">
+                                    {% for error in skill_formset.non_form_errors %}
+                                        <span><i class="fa fa-exclamation-triangle"></i>{{ error|escape }}</span>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        {% endif %}
+
+
+
+            {% if link_formset.non_form_errors %}
+                {% for error in link_formset.non_form_errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            <input type="submit" value="Update Profile" class="button"/>
+        </form>
+
+        <!-- Include formset plugin - including jQuery dependency -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="{% static 'js/jquery.formset.js' %}"></script>
+            <script>
+                $('.link-formset').formset({
+                    addText: 'add next',
+                    deleteText: 'remove'
+                });
+            </script>
+
+    
+  </div>
+{% endblock %}
+

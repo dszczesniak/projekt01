@@ -15,6 +15,8 @@ urlpatterns = [
      url(r'^edit_profile/$', 'proj.views.profile_settings', name='profile_settings'),
      url(r'^update_exp/$', 'proj.views.update_exp', name='update_exp'),
      url(r'^groups/$', 'proj.views.groups', name='groups'),
+     url(r'^(?P<pk>[0-9]+)/choose_group/$', 'proj.views.choose_group', name='choose_group'),
+     url(r'^skill_settings/$', 'proj.views.skill_settings', name='skill_settings'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

@@ -1,6 +1,6 @@
 from django import forms
 from .models import SignUp
-from .models import Cv, Search, Group
+from .models import Cv, Search, Group, Skill, UserSkill, SkillMod
 from django.forms.formsets import BaseFormSet
 from datetime import datetime
 
@@ -101,6 +101,12 @@ class LinkForm(forms.Form):
 		choices=YEARS_CHOICES,
 		required=False)
 
+	# skills
+
+	skil = forms.CharField(
+		max_length= 50,
+		widget = forms.TextInput(attrs = {'placeholder': 'Skill',}), required = False)
+
 
 
 
@@ -184,8 +190,69 @@ class ProfileImageForm(forms.Form):
 
 
 
+
+
+
 class GroupForm(forms.ModelForm):
 
 	class Meta:
 		model = Group
 		fields = ('name',)
+
+
+
+
+
+
+
+class BaseSkillFormSet(BaseFormSet):
+	def clean(self):
+		"""
+		Adds validation to check that no skill is listed twice
+		and that all skills have both a name and proficiency.
+		"""
+		if any(self.errors):
+			return
+
+		skills = []
+
+		for form in self.forms:
+			if form.cleaned_data:
+				skill = form.cleaned_data['skill']
+				proficiency = form.cleaned_data['proficiency']
+
+				 # Check that no two skills are the same
+				if skill and proficiency:
+					if skill in skills:
+						raise forms.ValidationError(
+							_('Each skill can only be entered once.'),
+							code='duplicate_skill'
+						)
+
+					skills.append(skill)
+
+				# Check that all skills have both a name and proficiency
+				if skill and not proficiency:
+
+					raise forms.ValidationError(
+						_('All skills must have a proficiency.'),
+						code='missing_proficiency'
+					)
+
+				elif proficiency and not skill:
+					raise forms.ValidationError(
+						_('All skills must have a skill name.'),
+						code='missing_skill_name'
+					)
+
+
+
+class SkillForm(forms.Form):
+	"""
+	Form for individual user skills
+	"""
+	skills = Skill.objects.all()
+	skill = forms.ModelChoiceField(queryset=skills, required=False)
+
+	proficiency = forms.ChoiceField(choices=UserSkill.PROFICIENCY_CHOICES,
+									required=False)

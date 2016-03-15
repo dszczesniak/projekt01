@@ -20,24 +20,15 @@
 
       h2{
         font-weight: bold;
-        font-size: 26px;
+        font-size: 29px;
       }
 
       .ramka{
         border-style: groove;
         border-radius: 10px;
-        padding: 15px;
+        padding: 20px;
       }
 
-      .boczne{
-        font-size: 20px;
-        text-align: right;
-        position: fixed;
-        display: inherit;
-        list-style-type:none;
-        padding-left: 785px;
-
-      }
 
       .srodkowe{
         font-size: 20px;
@@ -45,8 +36,8 @@
         position: fixed;
         display: inherit;
         list-style-type:none;
-        padding-left: 640px;
-        padding-top: 320px;
+        padding-left: 660px;
+        padding-top: 38px;
       }
 
 
@@ -59,52 +50,35 @@
         border-style: groove;
         border-radius: 10px;
         position: absolute;
-        margin-left: 435px;
+        margin-left: 385px;
         margin-top: -100px;
         overflow: hidden;
       }
 
-      a.btn-lg.btn-info{
-        width: 100px;
-
-      }
     
     span.glyphicon{
         margin-bottom: 9px;
-        min-width: 215px;
+        min-width: 355px;
         text-align: center;
         font-family: Courier New;
     }
 
-    span.glyphicon.glyphicon-pencil{
-        min-width: 360px;
-        font-family: Arial;
-
-    }
-
-    .bocznee{
-        margin-bottom: 20px;
-        border-radius: 10px;
-        text-shadow: #666 .1em .1em .1em;
-        box-shadow: 5px 5px 5px rgba(0,0,0,.5);
-
-
-    }
-
     .boczne_2{
+
         margin-bottom: 20px;
         border-radius: 10px;
         text-shadow: #666 .1em .1em .1em;
         box-shadow: 5px 5px 5px rgba(0,0,0,.5);
     }
 
+    .boczne_1{
+        margin-bottom: 20px;
+        border-radius: 10px;
+        text-shadow: #666 .1em .1em .1em;
+        box-shadow: 5px 5px 5px rgba(0,0,0,.5);
+    }
 
-    .bocznee a:active, li:active {
-        top: 3px;
-        left: 3px;
-        box-shadow: 0 1px 2px rgba(0,0,0,.5);
-        }
-
+    
 
 
     {% endblock %}
@@ -113,20 +87,20 @@
 
 {% block profile %}
     {% if cv.author == request.user %}
-        <ul class="boczne">
-            <li class="bocznee" ><a class="btn-lg btn-warning" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon glyphicon-pencil"> Update your basic information</span></a></li>
-            <li class="bocznee"><a class="btn-lg btn-warning" href="/edit_profile"><span class="glyphicon glyphicon-pencil"> Update your Education part</span></a></li>
-            <li class="bocznee"><a class="btn-lg btn-warning" href="/update_exp"><span class="glyphicon glyphicon-pencil"> Update your Experience part</span></a></li>
-        </ul>
         <ul class="srodkowe">
-            <li class="boczne_2" ><a class="btn-lg btn-info" href="/groups"><span class="glyphicon"> Groups </span></a></li>
-            <li class="boczne_2"><a class="btn-lg btn-info" href="{% url "send_message" pk=cvs.pk %}"><span class="glyphicon"> Send a message </span></a></li>
-            <li class="boczne_2"><a class="btn-lg btn-info" href="/update_exp"><span class="glyphicon"> Notes </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon"> Update main info </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="/edit_profile"><span class="glyphicon"> Update education </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="/update_exp"><span class="glyphicon"> Update experience </span></a></li>
+        
+        
+            <li class="boczne_2" ><a class="btn-lg btn-info" href="/groups"><span class="glyphicon"> My Groups </span></a></li>
+            <li class="boczne_2"><a class="btn-lg btn-info" href=""><span class="glyphicon"> Notes </span></a></li>
         </ul>
     {% endif %}
     {% if not cv.author == request.user %}
         <ul class="srodkowe">
-            <li class="boczne_2"><a class="btn-lg btn-info" href="/send_message"><span class="glyphicon"> Send a message </span></a></li>
+            <li class="boczne_2"><a class="btn-lg btn-info" href="{% url "send_message" pk=cv.pk %}"><span class="glyphicon"> Send a message </span></a></li>
+            <li class="boczne_2"><a class="btn-lg btn-info" href="{% url "choose_group" pk=cv.pk %}"><span class="glyphicon"> Add to group </span></a></li>
         </ul>
     {% endif %}
         <p></p><br>
@@ -202,14 +176,14 @@
 
                                 <div class="ramka">
                                     <p><b>Firma:</b> {{ fir.firma }}</p>
-                                    {% if fir.city_1 %}
+                                    {% if fir.city_2 %}
                                         <p><b>City:</b> {{ fir.city_2 }}</p>
                                     {% endif %}
                                         <p><b>Position:</b> {{ fir.position }}</p>
-                                    {% if fir.description_1 %}
                                     {% if fir.fir_1 %}
                                         <p><b>Study period:</b> {{ fir.fir_1 }} - {{ fir.fir_2 }}</p>
                                     {% endif %}
+                                    {% if fir.description_2 %}
                                         <p><b>Description:</b> {{ fir.description_2 }}</p>
                                     {% endif %}
                                 </div><br>

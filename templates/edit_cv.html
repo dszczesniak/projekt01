@@ -28,7 +28,7 @@
 
 	    <form method="POST" class="post-form" enctype="multipart/form-data">
       {% csrf_token %}
-	        {{ form|crispy }}
+	    {{ form|crispy }}
 
 	        <button type="submit" class="save btn btn-default">Save</button>
 	    </form>

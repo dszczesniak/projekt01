@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:60%;
+        opacity: 0.9;
+        padding: 5px 1px;
+        margin: auto;
+        margin-bottom: 35px;
+        text-align: center;
+      }
+
+      ul{
+        list-style-type:none;
+      }
+
+      .li1{
+
+        font-family: 'Courier';
+        font-style: normal;
+        margin-left: 173px;
+        margin-bottom: 25px;
+        font-size: 25px;
+        display: block;
+        border-radius: 10px;
+
+      }
+
+      .li1 b{
+        font-size: 25px;
+        display: block;
+        width: 700px;
+        height: 30px;
+        padding: 40px 0px 60px 0px;
+        text-align: center;
+        position: relative;
+        border-radius: 10px;
+      }
+
+    {% endblock %}
+</style>
+
+
+
+
+
+
+
+{% block profile %}
+
+  <br>
+      <div class="jumbotron">
+        <h3>Choose a group to add:</h3>
+      </div>
+
+            
+            
+       <ul>
+        {% for m in gr %}
+        <form method="POST" class="post-form" >{% csrf_token %}
+        <button type="submit" class="li1" name="group" value="{{m.name}}"> <b>{{ m.name }}</b></button>
+        
+
+        </form>
+        {% endfor %}
+       </ul>       
+
+
+{% endblock %}

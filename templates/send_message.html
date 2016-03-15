@@ -33,12 +33,12 @@
 <div class="jumbotron">
   <form method="POST" action=''>
   {% csrf_token %}
-  {% for c in cv %}
-    <h3>Send a message to {{c.name}} {{c.surname}}</h3><br>
-  {% endfor %}
+
+    <h3>Send a private message to {{cvs.name}} {{cvs.surname}} </h3><br>
+
   {{ form|crispy }}
 
-  <input type='submit' value='Submit' />
+  <input type='submit' value='Send !' />
 
 
 
