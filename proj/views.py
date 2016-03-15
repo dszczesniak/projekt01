@@ -360,6 +360,8 @@ def groups(request):
 
 
 
+
+
 	elif request.method == "POST" and 'leave' in request.POST:
 
 		cvs = Cv.objects.all()
@@ -386,6 +388,9 @@ def groups(request):
 			}
 
 		return redirect(reverse('groups'), context)
+
+
+
 
 
 
@@ -429,6 +434,9 @@ def groups(request):
 
 
 
+
+
+
 	else:								# wyswietlenie wszystkich dostepnych grup
 		cvs = Cv.objects.all()
 		cv = Cv.objects.filter(author = request.user)
@@ -450,6 +458,10 @@ def groups(request):
 		}
 
 		return render(request, 'groups.html', context)
+
+
+
+
 
 
 
