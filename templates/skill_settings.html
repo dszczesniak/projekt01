@@ -14,21 +14,27 @@
       }
 
       .jumbotron{
-        width:55%;
-        opacity: 0.9;
-      }
-
-      .ramka{
-        border-style: groove;
-        border-radius: 10px;
-        padding: 15px;
+        opacity: 0.93;
+        width:90%;
+        margin:auto;
+        border: 1px solid black;
       }
 
       .link-formset{
-        padding-bottom: 5%;
+        padding-bottom: 2%;
+        padding-left: 21%;
       }
       
-      
+      h3{
+        text-align: center
+      }
+
+      p{
+        float: left;
+        padding-right: 4%;
+      }
+
+
 
     {% endblock %}
 </style>
@@ -37,81 +43,68 @@
 {% block profile %}
     <p></p>
     <div class="jumbotron">
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ skill_formset.management_form }}
+            <h3> Specify your skills</h3><br>
+            {% for skill_form in skill_formset %}
+                <div class="link-formset">
+                    <hr width="74%" align="left">
+                     <p style="font-size:15px">
+                     Name of skill: 
+                        {{ skill_form.skill_name }}
+                        {% if skill_form.skill_name.errors %}
+                            {% for error in skill_form.skill_name.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}
+
+                    
+
+                     Level: 
+                        {{ skill_form.level }}
+                        {% if skill_form.level.errors %}
+                            {% for error in skill_form.level.errors %}
+                                {{ error|escape }}
+                            {% endfor %}
+                        {% endif %}
+                       </p>
+                    </div>
+                    
+            {% endfor %}
+
+            <br><br>
+
+
+            <input type="submit" value="Update Profile" class="button"/>
+
+
+        </form><br>
+
+        {% if skill_formset.non_form_errors %}
+            {% for error in skill_formset.non_form_errors %}
+                {{ error|escape }}
+            {% endfor %}
+        {% endif %}
+
         {% if messages %}
             {% for message in messages %}
                 <p>{{ message }}</p>
             {% endfor %}
         {% endif %}
 
-        <form method="post">
-            {% csrf_token %}
-
-            
-            <p>Heloooo</p>
-
-
-                        {{ link_formset.management_form }}
-                        {{ skill_formset.management_form }}
-                        {{ form.management_form }}
-
-                         <div class="link-formset">
-                            <div style="border-style:groove; border-radius: 8px; padding: 12px 0 0 7px;"> 
-                        {% for link_form in link_formset %}
-
-                            <p style="font-size:15px">Firma: 
-                            {{ link_form.skil }}
-                            {% if link_form.skil.errors %}
-                                {% for error in link_form.skil.errors %}
-                                    {{ error|escape }}
-                                {% endfor %}
-                            {% endif %}</p>
-
-                        {% endfor %}
-
-
-
-                        {% for form in skill_formset %}
-                            
-                            {{ form.proficiency }}
-
-                        {% endfor %}
-
-                            </div>
-                        </div>
-
-
-                        {% if skill_formset.non_form_errors %}
-                            <div>
-                                <span class="form-error">
-                                    {% for error in skill_formset.non_form_errors %}
-                                        <span><i class="fa fa-exclamation-triangle"></i>{{ error|escape }}</span>
-                                    {% endfor %}
-                                </span>
-                            </div>
-                        {% endif %}
-
-
-
-            {% if link_formset.non_form_errors %}
-                {% for error in link_formset.non_form_errors %}
-                    {{ error|escape }}
-                {% endfor %}
-            {% endif %}
-
-            <input type="submit" value="Update Profile" class="button"/>
-        </form>
-
         <!-- Include formset plugin - including jQuery dependency -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="{% static 'js/jquery.formset.js' %}"></script>
             <script>
                 $('.link-formset').formset({
-                    addText: 'add next',
-                    deleteText: 'remove'
+                    addText: 'Add next',
+                    deleteText: 'Remove'
                 });
             </script>
 
     
   </div>
 {% endblock %}
-

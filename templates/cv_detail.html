@@ -15,7 +15,8 @@
 
       .jumbotron{
         width:55%;
-        opacity: 0.9;
+        opacity: 0.94;
+        border: 1px solid black;
       }
 
       h2{
@@ -25,7 +26,7 @@
 
       .ramka{
         border-style: groove;
-        border-radius: 10px;
+        border-radius: 7px;
         padding: 20px;
       }
 
@@ -91,10 +92,10 @@
             <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon"> Update main info </span></a></li>
             <li class="boczne_1"><a class="btn-lg btn-warning" href="/edit_profile"><span class="glyphicon"> Update education </span></a></li>
             <li class="boczne_1"><a class="btn-lg btn-warning" href="/update_exp"><span class="glyphicon"> Update experience </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="/skill_settings"><span class="glyphicon"> Specify skills </span></a></li>
         
         
             <li class="boczne_2" ><a class="btn-lg btn-info" href="/groups"><span class="glyphicon"> My Groups </span></a></li>
-            <li class="boczne_2"><a class="btn-lg btn-info" href=""><span class="glyphicon"> Notes </span></a></li>
         </ul>
     {% endif %}
     {% if not cv.author == request.user %}
@@ -117,7 +118,7 @@
             <div class="ramka">
                 <p><b>Name:</b> {{ cv.name }}</p> 
                 <p><b>Surname:</b> {{cv.surname}}</p>
-                <p><b>City:</b> {{ cv.address }}</p>
+                <p><b>City:</b> {{ cv.city }}</p>
                 {% if cv.birth_date %}
                     <p><b>Age:</b> {{ cv.age }}</p>
                 {% endif %}
@@ -127,7 +128,9 @@
 
 
             <div class="ramka">
-                <p><b>Skills: </b>{{cv.skills }}</p>
+                {% if cv.main_language %}
+                    <p><b>Main language: </b>{{cv.main_language }}</p>
+                {% endif %}
                 {% if cv.specialization %}
                     <p><b>Specialization:</b> {{cv.specialization}}</p>
                 {% endif %}
@@ -136,8 +139,20 @@
                 {% endif %}
             </div>
 
+<!-- start first card -->
+            <h3>Skills</h3>
+            <div class="ramka">
+                {% for skill in user_skills %}
+                    {% if cv.author == skill.user %}
 
-            <!-- start first card -->
+                            <p><b>{{skill.skill_name}}</b> - {{skill.level}}</p>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+<!-- end of first card -->
+
+<!-- start second card -->
             <h3>Education</h3>  
                     {% for lin in user_links %}
 
@@ -165,12 +180,13 @@
                         {% endif %}
 
                     {% endfor %}
-        <!-- end of first card -->
-        <!-- start second card -->
+<!-- end of second card -->
+
+<!-- start third card -->
             <h3>Experience</h3> 
                      {% for fir in user_firms %}
 
-                        {% if cv.author == fir.userr %}
+                        {% if cv.author == fir.user %}
 
                                                       
 
@@ -195,11 +211,11 @@
 
                     {% endfor %}
 
-                <!-- end of second card -->
+<!-- end of third card -->
 
 
         {% if  cv.summary %}
-            <h3>Something more?</h3>
+            <h3>About Me</h3>
                 <div class="ramka">
                         <p>{{cv.summary}}</p>
                 </div>

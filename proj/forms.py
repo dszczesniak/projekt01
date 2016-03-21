@@ -1,6 +1,6 @@
 from django import forms
 from .models import SignUp
-from .models import Cv, Search, Group, Skill, UserSkill, SkillMod
+from .models import Cv, Group
 from django.forms.formsets import BaseFormSet
 from datetime import datetime
 
@@ -8,7 +8,7 @@ from datetime import datetime
 class SendMessageForm(forms.Form):
 
 	message = forms.CharField(
-		widget=forms.Textarea(attrs={'rows': '5', 'cols': '60',}))
+		widget=forms.Textarea(attrs={'rows': '10', 'cols': '60',}))
 	
 
 
@@ -31,13 +31,13 @@ class CvForm(forms.ModelForm):
 
 	class Meta:
 		model = Cv
-		fields = ('name', 'surname', 'address', 'telephone', 'birth_date', 'email', 'skills', 'specialization', 'interests', 'summary', 'thumbnail',)
+		fields = ('name', 'surname', 'city', 'birth_date', 'telephone', 'email', 'main_language', 'specialization', 'interests', 'summary', 'thumbnail',)
 
-class SearchForm(forms.ModelForm):
+#class SearchForm(forms.ModelForm):
 
-	class Meta:
-		model = Search
-		fields = ('sort', 'search_text',)
+#	class Meta:
+#		model = Search
+#		fields = ('sort', 'search_text',)
 
 
 YEARS_CHOICES = tuple((str(n), str(n)) for n in range(1955, datetime.now().year + 1))
@@ -111,9 +111,28 @@ class LinkForm(forms.Form):
 
 
 
-class NameForm(forms.Form):
-	study1 = forms.ChoiceField(label="Period of study",	choices=YEARS_CHOICES)
-	study2 = forms.ChoiceField(label=" ",	choices=YEARS_CHOICES)
+
+LEVEL_CHOICES = (
+		('', '---------'),
+		('BEGINNER', ('Beginner')),
+		('INTERMEDIATE', ('Intermediate')),
+		('ADVANCED', ('Advanced')),
+		('EXPERT', ('Expert')),
+	)
+
+
+class SkillForm(forms.Form):
+
+
+	skill_name = forms.CharField(
+		max_length=20,
+		widget = forms.TextInput, required = False)
+
+	level = forms.ChoiceField(
+		choices=LEVEL_CHOICES,
+		required=False)
+
+
 
 
 
@@ -153,35 +172,34 @@ class BaseLinkFormSet(BaseFormSet):
 			if form.cleaned_data:
 				university = form.cleaned_data['university']
 				field = form.cleaned_data['field']
-"""
+
 				# Check that no two links have the same anchor or URL
-				if university and field:
-					if university in universitys:
-						duplicates = True
-					universitys.append(university)
-
-					if field in fields:
-						duplicates = True
-					fields.append(field)
-
-				if duplicates:
-					raise forms.ValidationError(
-						'Links must have unique anchors and URLs.',
-						code='duplicate_links'
-					)
-
-				# Check that all links have both an anchor and URL
-				if field and not university:
-					raise forms.ValidationError(
-						'All links must have an university.',
-						code='missing_university'
-					)
-				elif university and not field:
-					raise forms.ValidationError(
-						'All links must have a field.',
-						code='missing_field'
-					)
-"""
+#				if university and field:
+#					if university in universitys:
+#						duplicates = True
+#					universitys.append(university)
+#
+#					if field in fields:
+#						duplicates = True
+#					fields.append(field)
+#
+#				if duplicates:
+#					raise forms.ValidationError(
+#						'Links must have unique anchors and URLs.',
+#						code='duplicate_links'
+#					)
+#
+#				# Check that all links have both an anchor and URL
+#				if field and not university:
+#					raise forms.ValidationError(
+#						'All links must have an university.',
+#						code='missing_university'
+#					)
+#				elif university and not field:
+#					raise forms.ValidationError(
+#						'All links must have a field.',
+#						code='missing_field'
+#					)
 
 
 
@@ -197,7 +215,7 @@ class GroupForm(forms.ModelForm):
 
 	class Meta:
 		model = Group
-		fields = ('name',)
+		fields = ('name', 'description')
 
 
 
@@ -218,41 +236,29 @@ class BaseSkillFormSet(BaseFormSet):
 
 		for form in self.forms:
 			if form.cleaned_data:
-				skill = form.cleaned_data['skill']
-				proficiency = form.cleaned_data['proficiency']
+				skill_name = form.cleaned_data['skill_name']
+				level = form.cleaned_data['level']
 
 				 # Check that no two skills are the same
-				if skill and proficiency:
-					if skill in skills:
+				if skill_name and level:
+					if skill_name in skills:
 						raise forms.ValidationError(
-							_('Each skill can only be entered once.'),
+							('Each skill can only be entered once.'),
 							code='duplicate_skill'
 						)
 
-					skills.append(skill)
+					skills.append(skill_name)
 
 				# Check that all skills have both a name and proficiency
-				if skill and not proficiency:
+				if skill_name and not level:
 
 					raise forms.ValidationError(
-						_('All skills must have a proficiency.'),
-						code='missing_proficiency'
+						('All skills must have a level.'),
+						code='missing_level'
 					)
 
-				elif proficiency and not skill:
+				elif level and not skill_name:
 					raise forms.ValidationError(
-						_('All skills must have a skill name.'),
+						('All levels must have a skill name.'),
 						code='missing_skill_name'
 					)
-
-
-
-class SkillForm(forms.Form):
-	"""
-	Form for individual user skills
-	"""
-	skills = Skill.objects.all()
-	skill = forms.ModelChoiceField(queryset=skills, required=False)
-
-	proficiency = forms.ChoiceField(choices=UserSkill.PROFICIENCY_CHOICES,
-									required=False)

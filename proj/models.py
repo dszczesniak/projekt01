@@ -27,11 +27,11 @@ class Cv(models.Model):
 	author = models.ForeignKey('auth.User')
 	name = models.CharField(max_length=25, null = True)
 	surname = models.CharField(max_length=25, null = True)
-	address = models.CharField(max_length=100, blank=True)
+	city = models.CharField(max_length=100, blank=True)
 	telephone = models.IntegerField()
 	birth_date = models.DateField(blank=True, null=True)
 	email = models.EmailField(max_length=50, null=True)
-	skills = models.TextField(null=True)
+	main_language = models.CharField(max_length=15, null = True)
 	specialization = models.CharField(max_length=30, blank=True, null=True)
 	interests = models.TextField(blank=True, null=True)
 	summary = models.TextField(blank=True, null=True)
@@ -52,21 +52,21 @@ class Cv(models.Model):
 
 
 
-class Search(models.Model):
+#class Search(models.Model):
 
-	search_text = models.CharField(max_length=50)
+#	search_text = models.CharField(max_length=50)
 
-	SORT_CHOICE = (
-		('C', '----- Choose -----'),
-		('N', 'Name'),
-		('S', 'Surname'),
-		('E', 'E-mail'),
-	)
+#	SORT_CHOICE = (
+#		('C', '----- Choose -----'),
+#		('N', 'Name'),
+#		('S', 'Surname'),
+#		('E', 'E-mail'),
+#	)
 
-	sort = models.CharField(max_length=1, default=0, choices=SORT_CHOICE)
+#	sort = models.CharField(max_length=1, default=0, choices=SORT_CHOICE)
 
-	def __str__(self):
-		return self.search_text
+#	def __str__(self):
+#		return self.search_text
 
 
 
@@ -94,11 +94,12 @@ class UserLink(models.Model):
 		super(UserLink, self).save(*args, **kwargs)
 
 
+
 class UserFirm(models.Model):
 
-	userr = models.ForeignKey(settings.AUTH_USER_MODEL,
-							verbose_name=('userr'),
-							related_name='linkss')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+							verbose_name=('user'),
+							related_name='firm')
 
 	firma = models.CharField(max_length=50)
 	position = models.CharField(max_length=50)
@@ -108,15 +109,32 @@ class UserFirm(models.Model):
 	fir_2 = models.CharField(max_length=5)
 
 
-
 	def __str__(self):
 		return self.firma
 
 	def save(self, *args, **kwargs):
-		"""
-		Attempt to match a user link to a recognised brand (LinkBrand).
-		"""
 		super(UserFirm, self).save(*args, **kwargs)
+
+
+
+
+class UserSkill(models.Model):
+
+	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+							verbose_name=('user'),
+							related_name='skill')
+
+	skill_name = models.CharField(max_length=20)
+	level = models.CharField(max_length=30)
+
+
+	def __str__(self):
+		return self.name_skill
+
+	def save(self, *args, **kwargs):
+		super(UserSkill, self).save(*args, **kwargs)
+
+
 
 
 
@@ -140,6 +158,7 @@ class Person(models.Model):
 class Group(models.Model):
 	name = models.CharField(max_length=128)
 	members = models.ManyToManyField(Person, through='Membership')
+	description = models.TextField(max_length=350)
 
 	def __str__(self):              # __unicode__ on Python 2
 		return self.name
@@ -151,96 +170,3 @@ class Membership(models.Model):
 	group = models.ForeignKey(Group)
 
 
-
-
-
-
-
-
-class Skill(models.Model):
-	"""
-	Represents a skill in the community.
-	"""
-	name = models.CharField(('name'), max_length=100, unique=True)
-	owner = models.ManyToManyField(settings.AUTH_USER_MODEL,
-									through='UserSkill',
-									verbose_name=('owner'))
-
-	class Meta:
-		verbose_name = ('skill')
-		verbose_name_plural = ('skills')
-
-	def __str__(self):
-		return self.name
-
-
-class UserSkill(models.Model):
-	"""
-	How proficient an individual user is at a particular skill.
-	This model joins User and Skill ('through' table).
-	"""
-	BEGINNER = 10
-	INTERMEDIATE = 20
-	ADVANCED = 30
-	EXPERT = 40
-
-	PROFICIENCY_CHOICES = (
- 		('', '---------'),
-		(BEGINNER, ('Beginner')),
-		(INTERMEDIATE, ('Intermediate')),
-		(ADVANCED, ('Advanced')),
-		(EXPERT, ('Expert')),
-	)
-
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=("user"))
-	skill = models.ForeignKey(Skill, verbose_name=('skill'))
-	proficiency = models.IntegerField(('proficiency'),
-									choices=PROFICIENCY_CHOICES,
-									default=BEGINNER)
-
-	def get_proficiency_percentage(self):
-		"""
-		Return a user's profiency in a particular skill as a percentage,
-		based on the position of the proficiency in PROFICIENCY_CHOICES.
-		"""
-		choice_values = [choice[0] for choice in self.PROFICIENCY_CHOICES]
-		if '' in choice_values:
-			choice_values.remove('')  # Remove the empty proficiency choice
-		choice_values.sort()  # Ensure values are in the correct order
-
-		value = choice_values.index(self.proficiency) + 1
-		factor = 100 / len(choice_values)
-		percentage = round(value * factor)
-
-		return percentage
-
-	class Meta:
-		verbose_name = ('user skill')
-		verbose_name_plural = ('user skills')
-		unique_together = ('user', 'skill')
-
-	def __str__(self):
-		return '{} - {}'.format(self.user.get_name(), self.skill.name)
-
-
-
-
-
-
-
-class SkillMod(models.Model):
-
-	userrr = models.ForeignKey(settings.AUTH_USER_MODEL,
-							verbose_name=('userrr'),
-							related_name='linksss')
-
-	skil = models.CharField(max_length=50)
-
-	def __str__(self):
-		return self.skil
-
-	def save(self, *args, **kwargs):
-		"""
-		Attempt to match a user link to a recognised brand (LinkBrand).
-		"""
-		super(SkillMod, self).save(*args, **kwargs)

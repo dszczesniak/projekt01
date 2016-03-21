@@ -24,17 +24,23 @@
         width:25%;
         padding: 1% 0;
         float: left;
-		opacity: 0.9;
+		opacity: 0.93;
+
       }
 
       .vvv {
       	background-color:white;
 		opacity: 0.96;
-		border-radius: 2px;
+		border-radius: 10px;
 		text-align: left;
 		margin: 3%;
-		padding: 2%;
-}
+		padding: 4% 1% 4% 1%;
+		border: 1px solid black;
+	  }
+
+	  h2{
+	  	text-align: center;
+	  }
     {% endblock %}
 </style>
 
@@ -43,13 +49,14 @@
 
 {% block base %}
 	<div class="vvv">
-		<h2>Base of users</h2><hr>
+		<h2>Users Base</h2><hr>
 		<table id="example" class="display" cellspacing="0" width="100%">
 			<thead>
 			  <tr>
 			  	<th>Nr.</th>
 			    <th>Full Name</th>
 			    <th>Specialization</th>		
+			    <th>Main language</th>
 			    <th>Age</th>
 			    <th>E-mail</th>
 			  </tr>
@@ -59,7 +66,14 @@
 				  <tr>
 				  	<td>{{forloop.counter}}.</td>
 				    <td><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">{{cv.name}} {{cv.surname}}</a></td>
-				    <td>{{cv.specialization}}</td>		
+				    <td>{{cv.specialization}}</td>
+
+				    {% if cv.main_language %}	
+				    	<td>{{cv.main_language}}</td>
+				    {% else %}
+				    	<td> </td>
+				    {% endif %}
+
 				    <td>{{ cv.age }} </td>
 				    <td>{{cv.email}}</td>
 				  </tr>

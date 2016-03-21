@@ -67,14 +67,14 @@
             
             
        <ul>
-        {% for m in gr %}
-        <form method="POST" class="post-form" >{% csrf_token %}
-        <button type="submit" class="li1" name="group" value="{{m.name}}"> <b>{{ m.name }}</b></button>
-        
+        {% for m in mem %}
 
+            <form method="POST" class="post-form" >{% csrf_token %}
+            <button type="submit" class="li1" name="group" value="{{m.group}}"> <b>{{ m.group }}</b></button>
+  
         </form>
         {% endfor %}
-       </ul>       
+       </ul>     
 
 
 {% endblock %}

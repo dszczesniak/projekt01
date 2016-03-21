@@ -15,7 +15,9 @@
 
       .jumbotron{
         width:55%;
-        opacity: 0.9;
+        opacity: 0.93;
+        margin-left: 10%;
+        border: 1px solid black;
       }
 
       .ramka{
@@ -28,7 +30,9 @@
         padding-bottom: 5%;
       }
       
-
+      legend{
+        text-align: center;
+      }
     {% endblock %}
 </style>
 
@@ -47,12 +51,12 @@
 
             {{ link_formset.management_form }}
             {{ form.management_form }}
-            <legend style="font-size: 23px;"> Update your education part</legend>
+            <legend style="font-size: 23px;"> Update your education part</legend><br>
             {% for link_form in link_formset %}
                 <div class="link-formset">
                   <div style="border-style:groove; border-radius: 8px; padding: 12px 0 0 7px;"> 
 
-                     <p style="font-size:15px">University: 
+                     <p style="font-size:15px"> 
                         {{ link_form.university }}
                         {% if link_form.university.errors %}
                             {% for error in link_form.university.errors %}
@@ -60,7 +64,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                    <p style="font-size:15px">City: 
+                    <p style="font-size:15px">
                         {{ link_form.city_1 }}
                         {% if link_form.city_1.errors %}
                             {% for error in link_form.city_1.errors %}
@@ -68,7 +72,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                     <p style="font-size:15px">Grade: 
+                     <p style="font-size:15px"> 
                         {{ link_form.grade }}
                         {% if link_form.grade.errors %}
                             {% for error in link_form.grade.errors %}
@@ -76,7 +80,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                     <p style="font-size:15px">Field of study: 
+                     <p style="font-size:15px"> 
                         {{ link_form.field }}
                         {% if link_form.field.errors %}
                             {% for error in link_form.field.errors %}
@@ -99,7 +103,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                    <p style="font-size:15px">Description: 
+                    <p style="font-size:15px">
                         {{ link_form.description_1 }}
                         {% if link_form.description_1.errors %}
                             {% for error in link_form.description_1.errors %}

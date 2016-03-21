@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
+
 <style>
     {% block style %}
       
@@ -13,14 +14,41 @@
       }
 
       .jumbotron{
-        width:30%;
-        opacity: 0.9;
+        width:40%;
+        opacity: 0.94;
         padding: 2px;
-        
+        float: left;
+        margin-left: 5%;
+        border: 1px solid black;
       }
 
       h3{
         text-align: center;
+      }
+
+      h4{
+        text-align: center;
+      }
+
+      .jumbo2{
+        margin-top: 2%;
+
+      }
+
+
+      #name{
+        font-size: 16px;
+
+      }
+
+      #desc{
+        padding: 3%;
+        font-size: 11px;
+      }
+
+      span.desc2{
+        font-weight: bold;
+      
       }
 
     {% endblock %}
@@ -36,7 +64,7 @@
         <h4>Create a new group here:</h4>
         <form method="POST" class="post-form">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form|crispy }}
             <button type="submit" name = "create" class="save btn btn-default">Go</button>
             <p>
                     {% if messages %}
@@ -71,27 +99,45 @@
             </div>
             {% endfor %}
     --> 
-              {% for g in gr %}
+              
+              {% for z in mem %}
                <div class="jumbotron">
+                <div class="jumbo2">
                   <form method="POST" class="post-form"> {% csrf_token %}
-                  <p><b>GROUP:</b> {{g.name}}</p>
+                    <p id="name"><b>Group's name:</b> {{z.group}}</p><br>
 
-                  {% for member in g.members.all %}
+                    {% for member in z.group.members.all %}
+                      {% for c in cvs %}
+                        {% if c.author == member.name %}
 
-                  <p><b>Member:</b> {{member.name}} </p>
+                          <p><b>Member:</b> {{member.name}} </p>
 
-                  {% endfor %}
-                  {% for z in mem %}
-                    {% if z.leader == False %}
-                      <button type="submit" name = "leave"  value = "{{g.name}}" class="save btn btn-default">Leave</button>
-                    {% elif z.leader == True %}
-                      <button type="submit" name = "delete"  value = "{{g.name}}" class="save btn btn-default">Delete</button>
-                    {% endif %}
-                  {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endfor %}
+                    
+
+                    <br>
+                    <span class="desc2">Group's description:</span>
+                    <p id="desc">{{z.group.description}}</p><br>
+                    
+                       
+                          {% if z.leader == False %}
+                            <button style="float: right" type="submit" name = "leave"  value = "{{z.group}}" class="save btn btn-default">Leave</button>
+                          {% elif z.leader == True %}
+                            <button style="float: right" type="submit" name = "delete"  value = "{{z.group}}" class="save btn btn-default">Delete</button>
+                          {% endif %}
+                    
                   </form>
-               </div>
+                  <br><br>
+                  <p>
+                  </p>
+
+                </div>
+              </div> 
 
               {% endfor %}
+             
            
        
 

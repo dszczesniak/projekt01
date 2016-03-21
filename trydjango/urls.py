@@ -7,7 +7,7 @@ urlpatterns = [
 
      url(r'^$', 'proj.views.home', name='home'),
      url(r'^(?P<pk>[0-9]+)/send_message/$', 'proj.views.send_message', name='send_message'),
-     url(r'^myprofile/$', 'proj.views.myprofile', name='myprofile'),
+   #  url(r'^myprofile/$', 'proj.views.myprofile', name='myprofile'),
      url(r'^cv/(?P<pk>[0-9]+)/edit/$', 'proj.views.edit_cv', name='edit_cv'),
      url(r'^new_cv/$', 'proj.views.new_cv', name='new_cv'),
      url(r'^cv/(?P<pk>[0-9]+)/$', 'proj.views.cv_detail'),

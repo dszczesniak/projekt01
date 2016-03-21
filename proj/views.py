@@ -11,13 +11,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from .forms import SendMessageForm, SignUpForm, CvForm, SearchForm
-from .forms import LinkForm, BaseLinkFormSet, ProfileForm, NameForm, BaseSkillFormSet, SkillForm
-from .forms import ProfileImageForm, GroupForm
+from .forms import SendMessageForm, SignUpForm, CvForm
+from .forms import LinkForm, BaseLinkFormSet, ProfileForm, BaseSkillFormSet
+from .forms import ProfileImageForm, GroupForm, SkillForm
 from .models import ProfileImage
-from .models import UserLink, UserFirm
-from .models import Cv, Person, Group, Membership, Skill, UserSkill, SkillMod
-from .models import Search
+from .models import UserLink, UserFirm, UserSkill
+from .models import Cv, Person, Group, Membership
 from django.views.generic import View, FormView, DetailView, ListView
 from datetime import datetime
 
@@ -145,6 +144,7 @@ def cv_detail(request, pk):
 
 	user_links = UserLink.objects.filter()
 	user_firms = UserFirm.objects.filter()
+	user_skills = UserSkill.objects.filter()
 
 
 	# listed_users = User.objects.all()
@@ -154,6 +154,7 @@ def cv_detail(request, pk):
 			# "listed_users": listed_users,
 			"user_links": user_links,
 			"user_firms": user_firms,
+			"user_skills": user_skills,
 			}
 
 	return render(request, 'cv_detail.html', con)
@@ -250,12 +251,12 @@ def profile_settings(request):
 
 @login_required
 def update_exp(request):
-	userr = request.user
+	user = request.user
 
 	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
 
 	# Get our existing link data for this user.  This is used as initial data.
-	user_firms = UserFirm.objects.filter(userr=userr).order_by('firma')
+	user_firms = UserFirm.objects.filter(user=user).order_by('firma')
 
 
 	link_data = [{'firma': l.firma, 'city_2': l.city_2, 'position': l.position, 'description_2': l.description_2, 'fir_1': l.fir_1, 'fir_2': l.fir_2,}
@@ -285,12 +286,12 @@ def update_exp(request):
 				fir_2 = link_form.cleaned_data.get('fir_2')
 
 				if firma and position:
-					new_objj.append(UserFirm(userr=userr, firma=firma, city_2=city_2, position=position, description_2=description_2, fir_1=fir_1, fir_2=fir_2))
+					new_objj.append(UserFirm(user=user, firma=firma, city_2=city_2, position=position, description_2=description_2, fir_1=fir_1, fir_2=fir_2))
 
 			try:
 				with transaction.atomic():
 				#Replace the old with the new
-					UserFirm.objects.filter(userr=userr).delete()
+					UserFirm.objects.filter(user=user).delete()
 					UserFirm.objects.bulk_create(new_objj)
 	
 					# And notify our users that it worked
@@ -315,6 +316,65 @@ def update_exp(request):
 
 
 
+
+
+@login_required
+def skill_settings(request):
+	user = request.user
+
+	SkillFormSet = formset_factory(SkillForm, formset=BaseSkillFormSet)
+
+	# Get our existing link data for this user.  This is used as initial data.
+	user_skills = UserSkill.objects.filter(user=user).order_by('skill_name')
+
+
+	skill_data = [{'skill_name': l.skill_name,'level': l.level,}
+					for l in user_skills]
+
+
+	if request.method == 'POST':
+
+		skill_formset = SkillFormSet(request.POST)
+
+		if skill_formset.is_valid():
+			
+		# Now save the data for each form in the formset
+			new_obj = []
+
+			for skill_form in skill_formset:
+				skill_name = skill_form.cleaned_data.get('skill_name')
+				level = skill_form.cleaned_data.get('level')
+
+				if skill_name and level:
+					new_obj.append(UserSkill(user=user, skill_name=skill_name, level=level))
+
+			try:
+				with transaction.atomic():
+				#Replace the old with the new
+					UserSkill.objects.filter(user=user).delete()
+					UserSkill.objects.bulk_create(new_obj)
+	
+					# And notify our users that it worked
+					messages.success(request, 'You have updated your profile.')
+
+			except IntegrityError: #If the transaction failed
+				messages.error(request, 'There was an error saving your profile.')
+				return redirect(reverse('skill_settings'))
+
+	else:
+		
+		skill_formset = SkillFormSet(initial=skill_data)
+
+	context = {
+
+		'skill_formset': skill_formset,
+		
+	}
+			
+	return render(request, 'skill_settings.html', context)
+
+
+
 @login_required
 def groups(request):
 	user = request.user
@@ -335,11 +395,9 @@ def groups(request):
 			if num_g >= 1:
 				messages.error(request, 'A group with the same name already exists.')
 			else:
-				g = Group.objects.create(name = formm.name)
+				g = Group.objects.create(name = formm.name, description = formm.description)
 				m = Membership.objects.create(person=p, group=g, leader=True)
 			
-
-
 
 
 			gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
@@ -359,6 +417,24 @@ def groups(request):
 
 
 
+		else:
+			gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
+			per = Person.objects.filter(name=request.user)
+			mem = Membership.objects.filter(group = gr, person = per)  
+
+			
+
+			context = {
+			'gr': gr,
+			'per':per,
+			'mem':mem,
+			'form': form,
+		
+			}
+			return render(request, 'groups.html', context)
+
+
+
 
 
 
@@ -375,6 +451,7 @@ def groups(request):
 		gd = Group.objects.get(name=request.POST['leave'])
 		#usuwanie
 		m = Membership.objects.filter(group = gd, person= p, leader = False).delete()  # odejscie z grupy / usuwa jednego uzytkownika - jego poloaczenie - tego zalogowanego
+
 
 		form = GroupForm()
 		context = {
@@ -406,12 +483,13 @@ def groups(request):
 		#definiowanie
 		p = Person.objects.filter(name=request.user)
 		gd = Group.objects.get(name=request.POST['delete'])
-		#usuwanie
 		m = Membership.objects.filter(group = gd, person= p, leader = True)
+		#usuwanie
 		for z in m:
 			if z.leader == True:
 				gdd = Group.objects.get(name=request.POST['delete']).delete() 
 			else:
+				messages.error(request, 'You are not a leader of this group.\n Can not be deleted.')
 				gdd = Group.objects.get(name=request.POST['delete']) 
 				
 		
@@ -477,8 +555,8 @@ def choose_group(request, pk):
 		cvs = get_object_or_404(Cv, pk=pk)
 		g = Group.objects.get(name=request.POST['group'])
 		
-		p = Person.objects.create(name=cvs.author)
-		m = Membership.objects.create(person=p, group=g, leader=False)
+		p = Person.objects.get_or_create(name=cvs.author)[0]
+		m = Membership.objects.get_or_create(person=p, group=g, leader=False)[0]
 
 
 		return redirect( 'proj.views.cv_detail', pk=cvs.pk )
@@ -489,11 +567,12 @@ def choose_group(request, pk):
 	else:
 		cv = Cv.objects.filter(author = request.user)
 		cvs = get_object_or_404(Cv, pk=pk)
-		gr = Group.objects.filter(members__name=request.user)
+		
+		mem = Membership.objects.filter(person__name = request.user, leader = True)
 
 		context = {
 
-			'gr':gr,
+			'mem':mem,
 			'cvs':cvs,
 			'cv':cv
 		}
@@ -502,102 +581,3 @@ def choose_group(request, pk):
 
 
 
-
-
-
-
-
-
-
-
-@login_required
-def skill_settings(request):
-	"""
-	Allows a user to update their own profile.
-	"""
-	userrr = request.user
-
-	#has_skills = Skill.objects.count() > 0
-
-	SkillFormSet = formset_factory(SkillForm, formset=BaseSkillFormSet)
-
-	user_skills = UserSkill.objects.filter(user=request.user).order_by('skill__name')
-	skill_data = [{'skill': s.skill, 'proficiency': s.proficiency}
-				for s in user_skills]
-
-	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
-
-	user_links = SkillMod.objects.filter(userrr=userrr)
-	link_data = [{'skil': l.skil}
-				for l in user_links]
-
-	if request.method == 'POST':
-		skill_formset = SkillFormSet(request.POST, prefix='skill')
-		link_formset = LinkFormSet(request.POST, prefix='link')
-
-		forms = [link_formset, skill_formset]
-
-
-
-		if skill_formset.is_valid():
-
-			objj = []
-			objj2 = []
-
-
-			for link_form in link_formset:
-				skil = link_form.cleaned_data.get('skil')
-
-				objj.append(SkillMod(userrr=userrr, skil=skil))
-
-			for x in skill_formset:
-				proficiency = x.cleaned_data.get('proficiency')
-
-				objj2.append(UserSkill(user=request.user, proficiency=proficiency))
-
-
-			try:
-				with transaction.atomic():
-					SkillMod.objects.filter(userrr=userrr).delete()
-					SkillMod.objects.bulk_create(objj)
-
-					UserSkill.objects.filter(user=request.user).delete()
-					UserSkill.objects.bulk_create(objj2)
-
-					messages.success(request, 'You have updated your profile.')
-
-			except IntegrityError:
-				messages.error(request, 'There was an error.')
-				return redirect(reverse('skill_settings'))
-
-	else:
-		skill_formset = SkillFormSet(initial=skill_data, prefix='skill')
-		link_formset = LinkFormSet(initial=link_data, prefix='link')
-
-
-
-
-
-
-			#save_skills(request, user, skill_formset)
-
-			#save_links(request, user, link_formset)
-
-			#user_links = SkillMod.objects.filter(userrr=userrr)
-			##match_link_to_brand(user_links)
-
-			#site = get_current_site(request)
-			#messages.success(request, _(
-				#'Your {} profile has been updated.'.format(site.name)))
-
-	#else:
-		#skill_formset = SkillFormSet(initial=skill_data, prefix='skill')
-		#link_formset = LinkFormSet(initial=link_data, prefix='link')
-
-	context = {
-		'skill_formset': skill_formset,
-		'link_formset': link_formset,
-		#'has_skills': has_skills,
-	}
-
-	return render(request, 'skill_settings.html', context)

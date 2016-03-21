@@ -15,20 +15,18 @@
 
       .jumbotron{
         width:55%;
-        opacity: 0.9;
-      }
-
-      .ramka{
-        border-style: groove;
-        border-radius: 10px;
-        padding: 15px;
+        opacity: 0.93;
+        margin-left: 10%;
+        border: 1px solid black;
       }
 
       .link-formset{
         padding-bottom: 5%;
       }
       
-      
+        legend{
+        text-align: center;
+      }
 
     {% endblock %}
 </style>
@@ -48,13 +46,13 @@
 
             {{ link_formset.management_form }}
             {{ form.management_form }}
-            <legend style="font-size: 23px;"> Update your experience part</legend>
+            <legend style="font-size: 23px;"> Update your experience part</legend><br>
             {% for link_form in link_formset %}
                 <div class="link-formset">
                   <div style="border-style:groove; border-radius: 8px; padding: 12px 0 0 7px;"> 
 
 
-                     <p style="font-size:15px">Firma: 
+                     <p style="font-size:15px">
                         {{ link_form.firma }}
                         {% if link_form.firma.errors %}
                             {% for error in link_form.firma.errors %}
@@ -62,7 +60,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                    <p style="font-size:15px">City: 
+                    <p style="font-size:15px">
                         {{ link_form.city_2 }}
                         {% if link_form.city_2.errors %}
                             {% for error in link_form.city_2.errors %}
@@ -70,7 +68,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                     <p style="font-size:15px">Position: 
+                     <p style="font-size:15px">
                         {{ link_form.position }}
                         {% if link_form.position.errors %}
                             {% for error in link_form.position.errors %}
@@ -93,7 +91,7 @@
                             {% endfor %}
                         {% endif %}</p>
 
-                    <p style="font-size:15px">Description: 
+                    <p style="font-size:15px">
                         {{ link_form.description_2 }}
                         {% if link_form.description_2.errors %}
                             {% for error in link_form.description_2.errors %}

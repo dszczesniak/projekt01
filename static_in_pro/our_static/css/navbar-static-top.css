@@ -66,11 +66,11 @@ body {
   text-shadow: #666 .1em .1em .1em;
   box-shadow: 0 5px 3px rgba(0,0,0,.5);
   position: relative;
-  -webkit-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
-  -moz-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
-  -o-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
-  -ms-transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
-  transition: background-color 0.2s, border-color 0.2s, top .2s, box-shadow 0.2s;
+  -webkit-transition: background-color 0.1s, border-color 0.1s, top .1s, box-shadow 0.1s;
+  -moz-transition: background-color 0.1s, border-color 0.1s, top .1s, box-shadow 0.1s;
+  -o-transition: background-color 0.1s, border-color 0.1s, top .1s, box-shadow 0.1s;
+  -ms-transition: background-color 0.1s, border-color 0.1s, top .1s, box-shadow 0.1s;
+  transition: background-color 0.1s, border-color 0.1s, top .1s, box-shadow 0.1s;
 }
 
 .li1 a:hover, a:focus {

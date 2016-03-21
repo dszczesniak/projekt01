@@ -10,13 +10,72 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
         background-size: cover;
+
       }
 
       .jumbotron p{
         font-size: 19px;
       }
 
+      .rama1{
+        margin:0;
+      }
 
+      .li1{
+        width:30%;
+        padding-right: 10px;
+      }
+
+      .lista1{
+        width:112%;
+
+      }
+
+      a.test1{
+        width: auto;
+        height: 500px;
+        font-size: 35px;
+        padding-top:60%;
+        opacity: 0.95;
+        margin-left: 3%;
+        margin-top: 30%;
+      }
+
+      a.test1:hover{
+        padding-top:50%;
+        font-size: 26px;
+      
+      }
+
+      a.test2{
+        width: auto;
+        height: 500px;
+        font-size: 35px;
+        padding-top:60%;
+        opacity: 0.95;
+        margin-left: 3%;
+        margin-top: 30%;
+      }
+      a.test2:hover{
+        padding-top:50%;
+        font-size: 26px;
+
+      }
+
+      a.test3{
+        width: auto;
+        height: 500px;
+        font-size: 35px;
+        padding-top:60%;
+        opacity: 0.95;
+        margin-left: 3%;
+        margin-top: 30%;
+      }
+      a.test3:hover{
+        padding-top:50%;
+        font-size: 26px;
+
+      }
 
     {% endblock %}
 </style>
@@ -36,48 +95,61 @@
       </div>
 {% endblock %}
 
-
+  
 
 
 
 {% block row_2 %}
 <div class="rama1">
       <ul class="lista1">
-      	<!-- <li class="li1"><a href="/"> Messages</a></li> -->
-      	<li class="li1"><a href="/base_cv"> Base</a></li>
-      	<!--<li class="li1"><a href="/"> Groups</a></li> -->
+      	<li class="li1"><a class='test1' href="/base_cv"> <span>Users Base</span> </a></li>
         {% for cv in cvs %}
-          <li class="li1"><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">My CV</a></li>   
+          <li class="li1"><a class='test2' href="{% url "proj.views.cv_detail" pk=cv.pk %}"><span>Cv</span></a></li>   
         {% endfor %}
-        <li class="li1"><a href="/groups"> My Groups </a></li>
+        <li class="li1"><a class="test3" href="/groups"> <span>Groups</span> </a></li>
       </ul>
-
-
-
-
-
-
-<!-- 
-<div id="form_document">
-    <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data" id="#form_document">
-        {% csrf_token %}
-        <div class="fileupload-buttonbar">
-            <label class="fileinput-button">
-                <span>Add files...</span>
-                {{ form.as_p }}
-                {{ image.as_p }}
-                <input type="file" name="files[]" multiple>
-            </label>
-            <button type="submit" class="start">Start upload</button>
-        </div>
-    </form>
-</div>
--->
-
-
-
-
 
 
 {% endblock %}
 
+
+
+
+
+{% block javascript %}
+
+  {{ block.super }} <!-- This makes sure the script form base.html are loaded. It's almost like supeerclassing -->
+
+<script>
+$( "a.test1" ).hover(
+  function() {
+    $( this ).find("span").remove();
+    $( this ).append( $( "<span> Search through users base to find individual team members. </span>" ) );
+  }, function() {
+    $( this ).find( "span:last" ).remove();
+    $( this ).append( $("<span> Users Base </span>") );
+  }
+);
+ 
+$( "a.test2" ).hover(
+  function() {
+    $( this ).find("span").remove();
+    $( this ).append( $( "<span> Change your profile information and check out how others see you. </span>" ) );
+  }, function() {
+    $( this ).find( "span:last" ).remove();
+    $( this ).append( $("<span> Cv </span>") );
+  }
+);
+
+$( "a.test3" ).hover(
+  function() {
+    $( this ).find("span").remove();
+    $( this ).append( $( "<span> Manage your project groups and their members. </span>" ) );
+  }, function() {
+    $( this ).find( "span:last" ).remove();
+    $( this ).append( $("<span> Groups </span>") );
+  }
+);
+</script>
+
+{% endblock %}

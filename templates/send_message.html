@@ -14,8 +14,11 @@
       }
 
       .jumbotron{
-        width:55%;
+        width:65%;
         opacity: 0.9;
+        margin:auto;
+        margin-top:100px;
+        border: 1px solid black;
       }
 
       h3{
@@ -34,7 +37,7 @@
   <form method="POST" action=''>
   {% csrf_token %}
 
-    <h3>Send a private message to {{cvs.name}} {{cvs.surname}} </h3><br>
+    <h3>Send a private message to <b>{{cvs.name}} {{cvs.surname}}</b> </h3><br>
 
   {{ form|crispy }}
 
