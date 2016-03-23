@@ -218,11 +218,7 @@ class GroupForm(forms.ModelForm):
 		fields = ('name', 'description')
 
 
-class MemberForm(forms.ModelForm):
 
-	class Meta:
-		model = Membership
-		fields = ('role',)
 
 
 
