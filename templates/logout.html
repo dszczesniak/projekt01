@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+        opacity: 0.94;
+        border: 1px solid black;
+        margin:auto;
+        margin-top: 5%;
+        text-align: center;
+      }
+    
+
+
+    {% endblock %}
+</style>
+
+{% block content %}
+<div class="jumbotron">
+	<h2> You are now logged out!</h2>
+	<p>Click <a href="/accounts/login/"> here </a> to login again.</p>
+</div>
+{% endblock %}

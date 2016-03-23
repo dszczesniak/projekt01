@@ -3,7 +3,10 @@ import zipfile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.contrib import auth
+from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
+from django.core.context_processors import csrf
 from django.db import IntegrityError, transaction
 from django.forms.formsets import formset_factory
 from django.conf import settings
@@ -12,6 +15,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render_to_response
 from .forms import SendMessageForm, SignUpForm, CvForm, MemberForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, BaseSkillFormSet
 from .forms import ProfileImageForm, GroupForm, SkillForm
@@ -64,7 +68,7 @@ def send_message(request, pk):
 		
 		form_message = form.cleaned_data.get("message")
 
-		subject = 'CvFinder - Message from user' 
+		subject = 'ITFinder - Message from user' 
 		from_emial = settings.EMAIL_HOST_USER
 		for c in cv:
 			start = 'Message from: '+c.email
@@ -611,3 +615,48 @@ def choose_group(request, pk):
 
 		return render(request, 'choose_group.html', context)
 
+
+
+def login(request):
+	c = {}
+	c.update(csrf(request))
+	return render_to_response('login.html', c)
+
+def auth_view(request):
+	username = request.POST.get('username', '')
+	password = request.POST.get('password', '')
+	user = auth.authenticate(username=username, password=password)
+
+	if user is not None:
+		auth.login(request, user)
+		return HttpResponseRedirect('/')
+	else:
+		return HttpResponseRedirect('/accounts/invalid')
+
+
+
+def invalid_login(request):
+	return render_to_response('invalid_login.html')
+
+def logout(request):
+	auth.logout(request)
+	return render_to_response('logout.html')
+
+def register_user(request):
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST)
+
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('/accounts/register_success')
+
+	args = {}
+	args.update(csrf(request))
+
+	args['form'] = UserCreationForm()
+	print args
+	return render_to_response('register.html', args)
+
+
+def register_success(request):
+	return render_to_response('register_success.html')

@@ -18,9 +18,15 @@ urlpatterns = [
      url(r'^(?P<pk>[0-9]+)/choose_group/$', 'proj.views.choose_group', name='choose_group'),
      url(r'^skill_settings/$', 'proj.views.skill_settings', name='skill_settings'),
     # url(r'^blog/', include('blog.urls')),
+     url(r'^accounts/login/$',  'proj.views.login'),
+     url(r'^accounts/auth/$',  'proj.views.auth_view'),
+     url(r'^accounts/logout/$',  'proj.views.logout'),
+     url(r'^accounts/invalid/$',  'proj.views.invalid_login'),
+     url(r'^accounts/register/$',  'proj.views.register_user'),
+     url(r'^accounts/register_success/$',  'proj.views.register_success'),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('registration.backends.default.urls')),
+   # url(r'^accounts/', include('registration.backends.default.urls')),
 ]
 
 

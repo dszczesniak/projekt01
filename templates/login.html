@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<style>
+    {% block style %}
+      
+      body {
+        background-image: url("{% static "img/tlo_strony.jpg" %}");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      .jumbotron{
+        width:55%;
+        opacity: 0.94;
+        border: 1px solid black;
+        margin:auto;
+        margin-top: 5%;
+        text-align: center;
+      }
+    
+
+
+    {% endblock %}
+</style>
+
+
+{% block content %}
+
+<div class="jumbotron">
+	{% if form.errors %}
+		<p class="error">Sorry, that's not a valid username or password</p>
+	{% endif %}
+
+	<form action="/accounts/auth/"  method="post"> {% csrf_token %}
+	
+		<label for="username">User name:</label>
+		<input type="text" name="username" value="" id="username"><br><br>
+		<label for="password">Password:</label>
+		<input type="password" name="password" value="" id="password"><br><br>
+
+		<input type="submit" value="login" class="btn btn-lg btn-primary"/>
+
+	</form>
+</div>
+
+{% endblock %}
