@@ -100,7 +100,7 @@
 
                     {% for membership in g.membership_set.all %}
                       
-                          <p><b>Member:</b> {{ membership.person }}</p>                            
+                          <p><b>Member:</b> {{ membership.person }} - {{ membership.role }}</p>                            
                                           
                     {% endfor %}
 

@@ -12,7 +12,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from .forms import SendMessageForm, SignUpForm, CvForm
+from .forms import SendMessageForm, SignUpForm, CvForm, MemberForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, BaseSkillFormSet
 from .forms import ProfileImageForm, GroupForm, SkillForm
 from .models import ProfileImage
@@ -397,7 +397,7 @@ def groups(request):
 				messages.error(request, 'A group with the same name already exists.')
 			else:
 				g = Group.objects.create(name = formm.name, description = formm.description)
-				m = Membership.objects.create(person=p, group=g, leader=True)
+				m = Membership.objects.create(person=p, group=g, leader=True, role="Team Leader")
 			
 
 
@@ -563,7 +563,7 @@ def choose_group(request, pk):
 
 			g = Group.objects.get(name=request.POST['group'])
 			p = Person.objects.get_or_create(name=cvs.author)[0]
-			m = Membership.objects.get_or_create(person=p, group=g, leader=False)[0]
+			m = Membership.objects.get_or_create(person=p, group=g, leader=False, role=formm.role)[0]
 
 
 			context = {
