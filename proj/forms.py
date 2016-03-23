@@ -1,6 +1,6 @@
 from django import forms
 from .models import SignUp
-from .models import Cv, Group
+from .models import Cv, Group, Membership
 from django.forms.formsets import BaseFormSet
 from datetime import datetime
 
@@ -217,6 +217,12 @@ class GroupForm(forms.ModelForm):
 		model = Group
 		fields = ('name', 'description')
 
+
+class MemberForm(forms.ModelForm):
+
+	class Meta:
+		model = Membership
+		fields = ('role',)
 
 
 

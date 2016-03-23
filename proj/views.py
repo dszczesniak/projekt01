@@ -1,4 +1,5 @@
 import os
+import zipfile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
-from .forms import SendMessageForm, SignUpForm, CvForm
+from .forms import SendMessageForm, SignUpForm, CvForm, MemberForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, BaseSkillFormSet
 from .forms import ProfileImageForm, GroupForm, SkillForm
 from .models import ProfileImage
@@ -396,7 +397,7 @@ def groups(request):
 				messages.error(request, 'A group with the same name already exists.')
 			else:
 				g = Group.objects.create(name = formm.name, description = formm.description)
-				m = Membership.objects.create(person=p, group=g, leader=True)
+				m = Membership.objects.create(person=p, group=g, leader=True, role="Team Leader")
 			
 
 
@@ -420,7 +421,7 @@ def groups(request):
 		else:
 			gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
 			per = Person.objects.filter(name=request.user)
-			mem = Membership.objects.filter(group = gr, person = per)  
+			mem = Membership.objects.filter(group = gr)  
 
 			
 
@@ -486,11 +487,14 @@ def groups(request):
 		m = Membership.objects.filter(group = gd, person= p, leader = True)
 		#usuwanie
 		for z in m:
-			if z.leader == True:
-				gdd = Group.objects.get(name=request.POST['delete']).delete() 
+			if z.leader == False:
+				gdd = Group.objects.get(name=request.POST['delete'])
+				messages.error(request, 'There was an error saving your profile.')
+
 			else:
-				messages.error(request, 'You are not a leader of this group.\n Can not be deleted.')
-				gdd = Group.objects.get(name=request.POST['delete']) 
+				gdd = Group.objects.get(name=request.POST['delete']).delete() 
+				
+				
 				
 		
 
@@ -511,18 +515,16 @@ def groups(request):
 
 
 
-
-
-
-
-	else:								# wyswietlenie wszystkich dostepnych grup
+	else:								
 		cvs = Cv.objects.all()
 		cv = Cv.objects.filter(author = request.user)
 		per = Person.objects.all()
 		gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
 		perr = Person.objects.filter(name=request.user)
-
 		mem = Membership.objects.filter(group = gr, person = perr)
+		mem2 = Membership.objects.filter(group = gr, person = perr)
+
+
 		form = GroupForm()
 		
 
@@ -533,6 +535,7 @@ def groups(request):
 			'form': form,
 			'cvs':cvs,
 			'cv':cv,
+
 		}
 
 		return render(request, 'groups.html', context)
@@ -550,16 +553,43 @@ def groups(request):
 @login_required
 def choose_group(request, pk):
 
-	if request.method == "POST":
+	if request.method == "POST" and 'group' in request.POST:
 
 		cvs = get_object_or_404(Cv, pk=pk)
-		g = Group.objects.get(name=request.POST['group'])
+		form = MemberForm(request.POST)
+
+		if form.is_valid():
+			formm = form.save(commit=False)
+
+			g = Group.objects.get(name=request.POST['group'])
+			p = Person.objects.get_or_create(name=cvs.author)[0]
+			m = Membership.objects.get_or_create(person=p, group=g, leader=False, role=formm.role)[0]
+
+
+			context = {
+
+			'g':g,
+			'cvs':cvs,
+			'p':p,
+			'm':m,
+			'form': form,
+			}
+
+			return redirect( 'proj.views.cv_detail', pk=cvs.pk )
+
+
+		else:
 		
-		p = Person.objects.get_or_create(name=cvs.author)[0]
-		m = Membership.objects.get_or_create(person=p, group=g, leader=False)[0]
+			mem = Membership.objects.filter(person__name = request.user, leader = True)
+			form = MemberForm()
 
+			context = {
 
-		return redirect( 'proj.views.cv_detail', pk=cvs.pk )
+			'mem':mem,
+			'form':form,
+			}
+
+			return render(request, 'choose_group.html', context)
 
 
 
@@ -569,15 +599,15 @@ def choose_group(request, pk):
 		cvs = get_object_or_404(Cv, pk=pk)
 		
 		mem = Membership.objects.filter(person__name = request.user, leader = True)
+		form = MemberForm()
 
 		context = {
 
 			'mem':mem,
 			'cvs':cvs,
-			'cv':cv
+			'cv':cv,
+			'form':form,
 		}
 
 		return render(request, 'choose_group.html', context)
-
-
 

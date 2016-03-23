@@ -168,5 +168,6 @@ class Membership(models.Model):
 	person = models.ForeignKey(Person)
 	leader = models.BooleanField(default=False)
 	group = models.ForeignKey(Group)
+	role = models.CharField(max_length=50)
 
 

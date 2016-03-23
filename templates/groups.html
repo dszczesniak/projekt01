@@ -32,7 +32,9 @@
 
       .jumbo2{
         margin-top: 2%;
-
+        border: 1px solid black;              /* Little trick for good layout. */
+        border-style: dotted;
+        border-color: white white white white;
       }
 
 
@@ -43,12 +45,16 @@
 
       #desc{
         padding: 3%;
-        font-size: 11px;
+        font-size: 12px;
+        border: 1px solid black;
       }
 
       span.desc2{
         font-weight: bold;
-      
+      }
+
+      #info{
+        font-size: 12px;
       }
 
     {% endblock %}
@@ -76,67 +82,50 @@
         </form>
       </div>
 
-      <!--
 
 
       <div class="jumbotron">
-            <div class="ramka">
-            {% for p in per %}
-                <p><b>Osoba:</b> {{ p.name }}</p> 
-            {% endfor %}
-            </div><br>
+      <legend>Info.</legend>
+        <p id="info">Only <b>Leader</b> have permission to delete their own groups.<br><b>Users</b> can only leave a group at their own request.</p>
       </div>
- 
-      
 
-            {% for m in mem %}
-            <div class="jumbotron">
-              <br>
-                <p><b>Name of group:</b> {{ m.group }} </p> 
 
-                <p><b>Member:</b> {{ m.person }} </p>
-              <br>
-            </div>
-            {% endfor %}
-    --> 
+
+              {% for g in gr %}
               
-              {% for z in mem %}
                <div class="jumbotron">
                 <div class="jumbo2">
                   <form method="POST" class="post-form"> {% csrf_token %}
-                    <p id="name"><b>Group's name:</b> {{z.group}}</p><br>
+                    <p id="name"><b>Group's name:</b> {{g.name}}</p><br>
 
-                    {% for member in z.group.members.all %}
-                      {% for c in cvs %}
-                        {% if c.author == member.name %}
-
-                          <p><b>Member:</b> {{member.name}} </p>
-
-                        {% endif %}
-                      {% endfor %}
+                    {% for membership in g.membership_set.all %}
+                      
+                          <p><b>Member:</b> {{ membership.person }} - {{ membership.role }}</p>                            
+                                          
                     {% endfor %}
-                    
 
+
+
+
+
+                    
                     <br>
                     <span class="desc2">Group's description:</span>
-                    <p id="desc">{{z.group.description}}</p><br>
-                    
-                       
-                          {% if z.leader == False %}
-                            <button style="float: right" type="submit" name = "leave"  value = "{{z.group}}" class="save btn btn-default">Leave</button>
-                          {% elif z.leader == True %}
-                            <button style="float: right" type="submit" name = "delete"  value = "{{z.group}}" class="save btn btn-default">Delete</button>
-                          {% endif %}
-                    
+                    <p id="desc">{{g.description}}</p><br>
+                         <br><br><br>
+                            <button style="float: left" type="submit" name = "leave"  value = "{{g.name}}" class="save btn btn-default">Leave</button>
+                         
+                            <button style="float: right" type="submit" name = "delete"  value = "{{g.name}}" class="save btn btn-default">Delete</button>
+                     
                   </form>
                   <br><br>
-                  <p>
-                  </p>
 
-                </div>
-              </div> 
 
-              {% endfor %}
+                            
+                    </div>
+                    </div>
+                    
+                {% endfor %}
              
            
        

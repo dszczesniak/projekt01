@@ -13,40 +13,22 @@
       }
 
       .jumbotron{
-        width:60%;
-        opacity: 0.9;
-        padding: 5px 1px;
-        margin: auto;
-        margin-bottom: 35px;
+        width:40%;
+        opacity: 0.94;
+        padding: 2px;
+        float: left;
+        margin-left: 5%;
+        border: 1px solid black;
+      }
+
+      h4{
         text-align: center;
       }
 
-      ul{
-        list-style-type:none;
+      button{
+        width: 100%;
       }
 
-      .li1{
-
-        font-family: 'Courier';
-        font-style: normal;
-        margin-left: 173px;
-        margin-bottom: 25px;
-        font-size: 25px;
-        display: block;
-        border-radius: 10px;
-
-      }
-
-      .li1 b{
-        font-size: 25px;
-        display: block;
-        width: 700px;
-        height: 30px;
-        padding: 40px 0px 60px 0px;
-        text-align: center;
-        position: relative;
-        border-radius: 10px;
-      }
 
     {% endblock %}
 </style>
@@ -59,22 +41,24 @@
 
 {% block profile %}
 
-  <br>
+<br>
       <div class="jumbotron">
-        <h3>Choose a group to add:</h3>
+
+        <h4>Define the role:</h4>
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+        <h4>Choose a group: </h4>
+        {% for m in mem %}
+          <p><button type="submit" name = "group" value="{{m.group}}" class="save btn btn-default">{{m.group}}</button></p>
+          
+
+        {% endfor %}
+        </form>
       </div>
 
-            
-            
-       <ul>
-        {% for m in mem %}
 
-            <form method="POST" class="post-form" >{% csrf_token %}
-            <button type="submit" class="li1" name="group" value="{{m.group}}"> <b>{{ m.group }}</b></button>
-  
-        </form>
-        {% endfor %}
-       </ul>     
 
 
 {% endblock %}
