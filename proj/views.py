@@ -458,7 +458,9 @@ def groups(request):
 		p = Person.objects.get(name=request.user)
 		gd = Group.objects.get(name=request.POST['leave'])
 		#usuwanie
-		m = Membership.objects.filter(group = gd, person= p, leader = False).delete()  # odejscie z grupy / usuwa jednego uzytkownika - jego poloaczenie - tego zalogowanego
+		my = Membership.objects.get(group = gd, person = p)
+		if my.leader == False:
+			m = Membership.objects.filter(group = gd, person= p, leader = False).delete()  # odejscie z grupy / usuwa jednego uzytkownika - jego poloaczenie - tego zalogowanego
 
 
 		form = GroupForm()
