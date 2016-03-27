@@ -96,15 +96,17 @@ def send_message(request, pk):
 
 @login_required
 def new_cv(request):
-    if request.method == "POST":
-        form = CvForm(request.POST, request.FILES)
-        if form.is_valid():
-            cv = form.save(commit=False)
-            cv.author = request.user
-            cv.save()
-            return redirect('proj.views.cv_detail', pk=cv.pk)
-    else:
-        form = CvForm()
+	if request.method == "POST":
+		form = CvForm(request.POST, request.FILES)
+
+		if form.is_valid():
+			cv = form.save(commit=False)
+			cv.author = request.user
+			cv.save()
+
+			return redirect('proj.views.cv_detail', pk=cv.pk)
+	else:
+		form = CvForm()
 	return render(request, 'new_cv.html', {'form': form})
 
 
@@ -392,8 +394,8 @@ def groups(request):
 		if form.is_valid():
 			formm = form.save(commit=False)
 
-
-			p = Person.objects.get_or_create(name=request.user)[0]
+			for c in cv:
+				p = Person.objects.get_or_create(name=request.user, id_person = c.id)[0]
 
 			num_g = Group.objects.filter(name = formm.name).count()
 
@@ -423,8 +425,9 @@ def groups(request):
 
 
 		else:
-			gr = Group.objects.filter(members__name=request.user) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
-			per = Person.objects.filter(name=request.user)
+			for c in cv:
+				gr = Group.objects.filter(members__name=request.user, members__id_person=c.id) # pokazuje grupy w ktorych Ja uczestnicze (zalogowany user)
+				per = Person.objects.filter(name=request.user, id_person=c.id)
 			mem = Membership.objects.filter(group = gr)  
 
 			
@@ -566,7 +569,7 @@ def choose_group(request, pk):
 			formm = form.save(commit=False)
 
 			g = Group.objects.get(name=request.POST['group'])
-			p = Person.objects.get_or_create(name=cvs.author)[0]
+			p = Person.objects.get_or_create(name=cvs.author, id_person = cvs.id)[0]
 			m = Membership.objects.get_or_create(person=p, group=g, leader=False, role=formm.role)[0]
 
 
@@ -614,6 +617,9 @@ def choose_group(request, pk):
 		}
 
 		return render(request, 'choose_group.html', context)
+
+
+
 
 
 

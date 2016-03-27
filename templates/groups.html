@@ -85,8 +85,8 @@
 
 
       <div class="jumbotron">
-      <legend>Info.</legend>
-        <p id="info">Only <b>Leader</b> have permission to delete their own groups.<br><b>Users</b> can only leave a group at their own request.</p>
+      <legend>Hint.</legend>
+        <p id="info">On this page, you have permission to freely create your own groups and check which projects you belong. You can add users to your group by browsing their profiles and clicking the button "add to group".<br><br>  Only <b>Leader</b> have permission to delete their own groups.<br><b>Users</b> can only leave a group at their own request.</p>
       </div>
 
 
@@ -97,10 +97,12 @@
                 <div class="jumbo2">
                   <form method="POST" class="post-form"> {% csrf_token %}
                     <p id="name"><b>Group's name:</b> {{g.name}}</p><br>
-
-                    {% for membership in g.membership_set.all %}
-                      
-                          <p><b>Member:</b> {{ membership.person }} - {{ membership.role }}</p>                            
+                    {% for cv in cvs %}
+                      {% for membership in g.membership_set.all %}
+                        {% if membership.person.id_person == cv.id %}
+                          <p><b>Member:</b> <a href="{% url "proj.views.cv_detail" pk=cv.pk %}"> {{cv.name}} {{cv.surname}} </a> - {{ membership.role }}</p>                            
+                        {% endif %}
+                      {% endfor %}
                                           
                     {% endfor %}
 

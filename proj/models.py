@@ -28,7 +28,6 @@ class Cv(models.Model):
 	name = models.CharField(max_length=25, null = True)
 	surname = models.CharField(max_length=25, null = True)
 	city = models.CharField(max_length=100, blank=True)
-	telephone = models.IntegerField()
 	birth_date = models.DateField(blank=True, null=True)
 	email = models.EmailField(max_length=50, null=True)
 	main_language = models.CharField(max_length=15, null = True)
@@ -46,10 +45,7 @@ class Cv(models.Model):
 		self.save()
 
 	def __str__(self):
-		return self.surname
-
-
-
+		return self.surname.encode('utf-8')
 
 
 #class Search(models.Model):
@@ -67,7 +63,6 @@ class Cv(models.Model):
 
 #	def __str__(self):
 #		return self.search_text
-
 
 
 
@@ -150,6 +145,7 @@ class ProfileImage(models.Model):
 
 class Person(models.Model):
 	name = models.CharField(max_length=128)
+	id_person = models.IntegerField()
 
 	def __str__(self):              # __unicode__ on Python 2
 		return self.name
