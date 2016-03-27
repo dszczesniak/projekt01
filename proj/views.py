@@ -462,6 +462,9 @@ def groups(request):
 		if my.leader == False:
 			m = Membership.objects.filter(group = gd, person= p, leader = False).delete()  # odejscie z grupy / usuwa jednego uzytkownika - jego poloaczenie - tego zalogowanego
 
+		else:
+			m = Membership.objects.filter(group = gd, person= p, leader = False)
+
 
 		form = GroupForm()
 		context = {
