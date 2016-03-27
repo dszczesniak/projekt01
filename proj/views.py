@@ -455,7 +455,8 @@ def groups(request):
 		gr = Group.objects.filter(members__name=request.user)
 
 		#definiowanie
-		p = Person.objects.get(name=request.user, id_person=cv.id)
+		for c in cv:
+			p = Person.objects.get(name=request.user, id_person=c.id)
 		gd = Group.objects.get(name=request.POST['leave'])
 		#usuwanie
 		my = Membership.objects.get(group = gd, person = p)
