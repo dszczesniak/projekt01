@@ -28,13 +28,13 @@ class Cv(models.Model):
 	name = models.CharField(max_length=25, null = True)
 	surname = models.CharField(max_length=25, null = True)
 	city = models.CharField(max_length=100, blank=True)
-	birth_date = models.DateField(blank=True, null=True)
+	birth_date = models.DateField(blank=True, null=True, help_text="(Format yyyy-mm-dd)")
 	email = models.EmailField(max_length=50, null=True)
-	main_language = models.CharField(max_length=15, null = True)
+	main_programming_language = models.CharField(max_length=15, null = True)
 	specialization = models.CharField(max_length=30, blank=True, null=True)
 	interests = models.TextField(blank=True, null=True)
 	summary = models.TextField(blank=True, null=True)
-	thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
+	#thumbnail = models.FileField(upload_to=get_upload_file_name, blank=True)
 
 
 	@property

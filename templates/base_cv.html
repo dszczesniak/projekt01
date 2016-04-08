@@ -68,8 +68,8 @@
 				    <td><a href="{% url "proj.views.cv_detail" pk=cv.pk %}">{{cv.name}} {{cv.surname}}</a></td>
 				    <td>{{cv.specialization}}</td>
 
-				    {% if cv.main_language %}	
-				    	<td>{{cv.main_language}}</td>
+				    {% if cv.main_programming_language %}	
+				    	<td>{{cv.main_programming_language}}</td>
 				    {% else %}
 				    	<td> </td>
 				    {% endif %}

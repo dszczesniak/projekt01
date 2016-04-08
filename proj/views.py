@@ -186,8 +186,9 @@ def base_cv(request):
 
 
 @login_required
-def profile_settings(request):
+def profile_settings(request, pk):
 	user = request.user
+	cvs = get_object_or_404(Cv, pk=pk)
 
 	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
 
@@ -234,7 +235,7 @@ def profile_settings(request):
 
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
-				return redirect(reverse('profile_settings'))
+			return redirect('proj.views.cv_detail', pk=cvs.pk)
 
 	else:
 
@@ -257,8 +258,9 @@ def profile_settings(request):
 
 
 @login_required
-def update_exp(request):
+def update_exp(request, pk):
 	user = request.user
+	cvs = get_object_or_404(Cv, pk=pk)
 
 	LinkFormSet = formset_factory(LinkForm, formset=BaseLinkFormSet)
 
@@ -306,7 +308,7 @@ def update_exp(request):
 
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
-				return redirect(reverse('update_exp'))
+			return redirect('proj.views.cv_detail', pk=cvs.pk)
 
 	else:
 		#form = NameForm()
@@ -326,8 +328,9 @@ def update_exp(request):
 
 
 @login_required
-def skill_settings(request):
+def skill_settings(request, pk):
 	user = request.user
+	cvs = get_object_or_404(Cv, pk=pk)
 
 	SkillFormSet = formset_factory(SkillForm, formset=BaseSkillFormSet)
 
@@ -366,7 +369,8 @@ def skill_settings(request):
 
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
-				return redirect(reverse('skill_settings'))
+
+			return redirect('proj.views.cv_detail', pk=cvs.pk)
 
 	else:
 		
@@ -375,7 +379,7 @@ def skill_settings(request):
 	context = {
 
 		'skill_formset': skill_formset,
-		
+
 	}
 			
 	return render(request, 'skill_settings.html', context)

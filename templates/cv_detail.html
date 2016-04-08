@@ -90,9 +90,9 @@
     {% if cv.author == request.user %}
         <ul class="srodkowe">
             <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "edit_cv" pk=cv.pk %}"><span class="glyphicon"> Update main info </span></a></li>
-            <li class="boczne_1"><a class="btn-lg btn-warning" href="/edit_profile"><span class="glyphicon"> Update education </span></a></li>
-            <li class="boczne_1"><a class="btn-lg btn-warning" href="/update_exp"><span class="glyphicon"> Update experience </span></a></li>
-            <li class="boczne_1"><a class="btn-lg btn-warning" href="/skill_settings"><span class="glyphicon"> Specify skills </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "profile_settings" pk=cv.pk %}"><span class="glyphicon"> Update education </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "update_exp" pk=cv.pk %}"><span class="glyphicon"> Update experience </span></a></li>
+            <li class="boczne_1"><a class="btn-lg btn-warning" href="{% url "skill_settings" pk=cv.pk %}"><span class="glyphicon"> Specify skills </span></a></li>
         
         
             <li class="boczne_2" ><a class="btn-lg btn-info" href="/groups"><span class="glyphicon"> My Groups </span></a></li>
@@ -127,8 +127,8 @@
 
 
             <div class="ramka">
-                {% if cv.main_language %}
-                    <p><b>Main language: </b>{{cv.main_language }}</p>
+                {% if cv.main_programming_language %}
+                    <p><b>Main language: </b>{{cv.main_programming_language }}</p>
                 {% endif %}
                 {% if cv.specialization %}
                     <p><b>Specialization:</b> {{cv.specialization}}</p>

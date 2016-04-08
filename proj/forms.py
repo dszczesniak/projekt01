@@ -31,17 +31,7 @@ class CvForm(forms.ModelForm):
 
 	class Meta:
 		model = Cv
-		fields = ('name', 'surname', 'city', 'birth_date', 'email', 'main_language', 'specialization', 'interests', 'summary', 'thumbnail',)
-
-	# Add some custom validation to our image field
-	def clean_image(self):
-		thumbnail = self.cleaned_data.get('thumbnail',False)
-		if thumbnail:
-			if thumbnail._size > 1*1024:
-				raise ValidationError("Image file too large ( > 4mb )")
-			return thumbnail
-		else:
-			raise ValidationError("Couldn't read uploaded image")
+		fields = ('name', 'surname', 'city', 'birth_date', 'email', 'main_programming_language', 'specialization', 'interests', 'summary',)
 
 #class SearchForm(forms.ModelForm):
 
