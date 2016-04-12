@@ -33,7 +33,7 @@
 
 {% block content %}
 <div class="jumbotron">
-	<h2>Register here:</h2><br>
+	<h2>Register here:</h2><hr>
 	<form action="/accounts/register/"  method="post">{% csrf_token %}
 	{{form|crispy}}
 	

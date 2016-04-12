@@ -157,7 +157,7 @@ class Group(models.Model):
 	description = models.TextField(max_length=350)
 
 	def __str__(self):              # __unicode__ on Python 2
-		return self.name
+		return self.name.encode('utf-8')
 
 
 class Membership(models.Model):

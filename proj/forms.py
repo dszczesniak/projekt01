@@ -208,6 +208,11 @@ class ProfileImageForm(forms.Form):
 
 
 
+class SearchForm(forms.Form):
+	search = forms.CharField(
+		max_length=15,
+		widget = forms.TextInput, required = False)
+
 
 
 
