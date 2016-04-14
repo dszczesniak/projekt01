@@ -230,8 +230,6 @@ def profile_settings(request, pk):
 					UserLink.objects.filter(user=user).delete()
 					UserLink.objects.bulk_create(new_obj)
 	
-					# And notify our users that it worked
-					messages.success(request, 'You have updated your profile.')
 
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
@@ -303,9 +301,6 @@ def update_exp(request, pk):
 					UserFirm.objects.filter(user=user).delete()
 					UserFirm.objects.bulk_create(new_objj)
 	
-					# And notify our users that it worked
-					messages.success(request, 'You have updated your profile.')
-
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
 			return redirect('proj.views.cv_detail', pk=cvs.pk)
@@ -364,8 +359,6 @@ def skill_settings(request, pk):
 					UserSkill.objects.filter(user=user).delete()
 					UserSkill.objects.bulk_create(new_obj)
 	
-					# And notify our users that it worked
-					messages.success(request, 'You have updated your profile.')
 
 			except IntegrityError: #If the transaction failed
 				messages.error(request, 'There was an error saving your profile.')
