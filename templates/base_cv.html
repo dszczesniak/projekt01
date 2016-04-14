@@ -81,8 +81,6 @@
 			  </tbody>
 		</table><br>
 
-	
-		<input type="text" name="username" value="test" id ="myInput"><br><br>
 
 	</div>
 {% endblock %}
@@ -98,11 +96,13 @@
 	<script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 	    <script>
 	      $(document).ready(function() {
+
 	        var table = $('#example').DataTable();
 
 	        $('#myInput').on( 'keyup', function() {
-	        	table.search( this.value ).draw();
+	        	table.search( this.value).draw();
 	        });
+
 
 	      });
 	</script>

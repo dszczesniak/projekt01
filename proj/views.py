@@ -18,7 +18,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response
 from .forms import SendMessageForm, SignUpForm, CvForm, MemberForm
 from .forms import LinkForm, BaseLinkFormSet, ProfileForm, BaseSkillFormSet
-from .forms import ProfileImageForm, GroupForm, SkillForm, SearchForm
+from .forms import ProfileImageForm, GroupForm, SkillForm
 from .models import ProfileImage
 from .models import UserLink, UserFirm, UserSkill
 from .models import Cv, Person, Group, Membership
@@ -534,21 +534,6 @@ def groups(request):
 
 
 
-	elif request.method == "POST" and 'search' in request.POST:
-
-		forma = SearchForm(request.POST)
-
-		if forma.is_valid():
-			search = forma.cleaned_data.get("search")
-
-		context = {
-
-			'search': search,
-			
-			}
-
-		return render(request, 'base_cv.html', context)
-
 
 
 
@@ -561,7 +546,7 @@ def groups(request):
 		perr = Person.objects.filter(name=request.user)
 		mem = Membership.objects.filter(group = gr, person = perr)
 		mem2 = Membership.objects.filter(group = gr, person = perr)
-		forma = SearchForm()
+
 
 		form = GroupForm()
 		
@@ -573,7 +558,7 @@ def groups(request):
 			'form': form,
 			'cvs':cvs,
 			'cv':cv,
-			'forma':forma,
+	
 
 		}
 
